@@ -1,0 +1,3247 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLASS TOGETHER - งานไม่ค้าง เพื่อนไม่ทิ้งกัน (ม.4/6)</title>
+  <link rel="icon" type="image/png" href="ตราสัญลักษณ์ M.4_6 อังกฤษ–จีน.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #F0F9FF;
+      --bg-card: #FFFFFF;
+      --bg-soft-blue: #E0F2FE;
+      --bg-soft-mint: #D1FAE5;
+      --bg-soft-amber: #FEF3C7;
+      --primary-blue: #0284C7;
+      --primary-blue-hover: #0369A1;
+      --light-blue: #38BDF8;
+      --mint-green: #10B981;
+      --mint-green-dark: #059669;
+      --amber-warn: #F59E0B;
+      --amber-dark: #D97706;
+      --danger: #EF4444;
+      --text-main: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --shadow-sm: 0 4px 12px rgba(2, 132, 199, 0.06);
+      --shadow-md: 0 10px 28px rgba(2, 132, 199, 0.12);
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 24px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Prompt', 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(160deg, #F0F9FF 0%, #ECFDF5 60%, #F8FAFC 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .hidden { display: none !important; }
+
+    /* ==================== LOGIN VIEW ==================== */
+    .login-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid #BAE6FD;
+      padding: 32px 26px;
+      text-align: center;
+    }
+    .brand-logo-circle {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      box-shadow: 0 8px 22px rgba(2, 132, 199, 0.16);
+      overflow: hidden;
+      border: 2px solid #BAE6FD;
+    }
+    .brand-logo-circle img,
+    .brand-icon-sm img,
+    .hero-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .brand-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      letter-spacing: -0.5px;
+    }
+    .brand-motto {
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--mint-green-dark);
+      margin-bottom: 18px;
+    }
+    .role-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #F1F5F9;
+      padding: 5px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      gap: 6px;
+    }
+    .role-tab {
+      border: none;
+      background: transparent;
+      padding: 10px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .role-tab.active {
+      background: #FFFFFF;
+      color: var(--primary-blue);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+    }
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
+    }
+    .demo-panel {
+      margin-top: 20px;
+      padding: 12px;
+      background: #F8FAFC;
+      border: 1px dashed #BAE6FD;
+      border-radius: 14px;
+      text-align: left;
+    }
+    .demo-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .demo-chip {
+      border: 1px solid #BAE6FD;
+      background: #FFFFFF;
+      color: #0369A1;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .demo-chip:hover { background: #E0F2FE; transform: translateY(-1px); }
+    .demo-chip.duty { border-color: #6EE7B7; background: #ECFDF5; color: #047857; }
+    .demo-chip.teacher { border-color: #C7D2FE; background: #EEF2FF; color: #4338CA; font-weight: 600; }
+
+    /* ==================== MINIMAL ICON TOPBAR ==================== */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #BAE6FD;
+    }
+    .topbar-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .brand-icon-sm {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, #38BDF8, #10B981);
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .topbar-title { font-weight: 700; font-size: 1.05rem; color: var(--primary-blue); line-height: 1.1; }
+    .topbar-sub { font-size: 0.75rem; color: var(--mint-green-dark); font-weight: 500; }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #F1F5F9;
+      padding: 4px;
+      border-radius: 14px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s;
+    }
+    .nav-btn:hover { color: var(--primary-blue); }
+    .nav-btn.active {
+      background: #FFFFFF;
+      color: var(--primary-blue);
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.12);
+    }
+    .nav-badge {
+      background: #F59E0B; color: #FFFFFF; font-size: 0.72rem;
+      font-weight: 700; padding: 1px 7px; border-radius: 99px;
+    }
+
+    .topbar-tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .user-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      border: 1px solid var(--border-color);
+      background: #FFFFFF;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .icon-btn:hover {
+      background: #F0F9FF;
+      border-color: #7DD3FC;
+      transform: translateY(-1px);
+    }
+    .icon-btn.danger:hover {
+      background: #FEE2E2;
+      border-color: #FCA5A5;
+    }
+    .cloud-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      display: inline-block; background: #38BDF8;
+    }
+    .cloud-dot.connected { background: #10B981; }
+
+    /* ==================== MAIN CONTAINER ==================== */
+    .main-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 20px 18px 50px;
+    }
+
+    /* Compact Student Greeting Strip */
+    .student-hero {
+      background: linear-gradient(135deg, #FFFFFF 0%, #E0F2FE 60%, #D1FAE5 100%);
+      border: 1px solid #BAE6FD;
+      border-radius: var(--radius-lg);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .hero-user {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .hero-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.1);
+    }
+    .hero-greeting {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0C4A6E;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .hero-motto {
+      font-size: 0.86rem;
+      color: #047857;
+      font-weight: 500;
+    }
+
+    /* ==================== 4 VISUAL SUMMARY CARDS ==================== */
+    .summary-grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .stat-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 2px solid transparent;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .stat-card.active-filter {
+      transform: translateY(-2px);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25);
+    }
+    .stat-card-total { border-color: #BAE6FD; }
+    .stat-card-submitted { border-color: #6EE7B7; background: #F0FDF4; }
+    .stat-card-progress { border-color: #7DD3FC; background: #F0F9FF; }
+    .stat-card-help { border-color: #FCD34D; background: #FFFBEB; }
+
+    .stat-icon {
+      width: 48px; height: 48px; border-radius: 14px; background: #FFFFFF;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); flex-shrink: 0;
+    }
+    .stat-value { font-size: 1.75rem; font-weight: 700; line-height: 1.1; color: var(--text-main); }
+    .stat-label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+
+    /* ==================== SUBJECT PILLS & SEARCH BAR ==================== */
+    .quick-filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      background: #FFFFFF;
+      padding: 10px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+    .subject-pills-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .subj-pill {
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .subj-pill:hover { background: #F0F9FF; }
+    .subj-pill.active {
+      background: var(--primary-blue);
+      color: #FFFFFF;
+      border-color: var(--primary-blue);
+    }
+    .subj-dot {
+      width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+    }
+    .compact-search {
+      position: relative;
+      min-width: 210px;
+      flex: 0 1 240px;
+    }
+    .compact-search input {
+      width: 100%;
+      padding: 7px 12px 7px 32px;
+      border-radius: 99px;
+      border: 1px solid #CBD5E1;
+      font-size: 0.84rem;
+      font-family: inherit;
+    }
+    .compact-search-icon {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    /* ==================== VISUAL TASK CARDS (ICON-FIRST) ==================== */
+    .task-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 16px;
+    }
+    .task-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      border: 2px solid #E2E8F0;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .task-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .task-card.status-submitted { border-color: #6EE7B7; background: linear-gradient(to bottom, #FFFFFF 80%, #ECFDF5 100%); }
+    .task-card.status-in_progress { border-color: #7DD3FC; background: linear-gradient(to bottom, #FFFFFF 80%, #F0F9FF 100%); }
+    .task-card.status-need_help { border-color: #FCD34D; background: linear-gradient(to bottom, #FFFFFF 80%, #FFFBEB 100%); }
+
+    .task-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .subject-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    .due-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #0369A1;
+      background: #E0F2FE;
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+    .task-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 8px 0 4px;
+      line-height: 1.35;
+    }
+    .task-desc {
+      font-size: 0.87rem;
+      color: var(--text-secondary);
+      white-space: pre-line;
+    }
+
+    /* Compact Symbol Chips Row inside Task Card */
+    .symbol-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 6px;
+    }
+    .sym-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      background: #F1F5F9;
+      padding: 3px 9px;
+      border-radius: 99px;
+      text-decoration: none;
+    }
+    .sym-chip.link {
+      background: #E0F2FE;
+      color: #0284C7;
+      font-weight: 600;
+    }
+    .sym-chip.warn {
+      background: #FEF3C7;
+      color: #B45309;
+    }
+    .sym-chip.done {
+      background: #D1FAE5;
+      color: #065F46;
+      font-weight: 600;
+    }
+
+    /* 3 Big Icon Status Buttons */
+    .task-status-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #E2E8F0;
+    }
+    .status-action-btn {
+      border: 1.5px solid #E2E8F0;
+      background: #FFFFFF;
+      padding: 9px 6px;
+      border-radius: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      transition: all 0.15s;
+    }
+    .status-action-btn .btn-ico { font-size: 1.25rem; line-height: 1; }
+    .status-action-btn .btn-txt { font-size: 0.76rem; font-weight: 600; color: var(--text-secondary); }
+
+    .status-action-btn.btn-stat-submitted:hover,
+    .status-action-btn.btn-stat-submitted.active {
+      background: #10B981; border-color: #059669;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+    }
+    .status-action-btn.btn-stat-progress:hover,
+    .status-action-btn.btn-stat-progress.active {
+      background: #0284C7; border-color: #0369A1;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+    }
+    .status-action-btn.btn-stat-help:hover,
+    .status-action-btn.btn-stat-help.active {
+      background: #F59E0B; border-color: #D97706;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+    }
+    .status-action-btn.active .btn-txt,
+    .status-action-btn:hover .btn-txt {
+      color: #FFFFFF;
+    }
+
+    /* ==================== CLASS DASHBOARD (VISUAL INFOGRAPHIC) ==================== */
+    .summary-grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .mini-stat-card {
+      background: #FFFFFF;
+      border: 1px solid #BAE6FD;
+      border-radius: var(--radius-md);
+      padding: 14px 10px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .mini-stat-green { border-color: #6EE7B7; background: #ECFDF5; }
+    .mini-stat-blue { border-color: #7DD3FC; background: #F0F9FF; }
+    .mini-stat-orange { border-color: #FCD34D; background: #FFFBEB; }
+    .mini-stat-icon { font-size: 26px; display: block; line-height: 1.1; }
+    .mini-stat-val { font-size: 1.65rem; font-weight: 700; color: var(--text-main); margin: 2px 0; }
+    .mini-stat-label { font-size: 0.78rem; color: var(--text-secondary); font-weight: 600; }
+
+    .dashboard-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .stack-col { display: flex; flex-direction: column; gap: 18px; }
+    .card {
+      background: var(--bg-card); border-radius: var(--radius-md);
+      border: 1px solid var(--border-color); padding: 20px; box-shadow: var(--shadow-sm);
+    }
+    .card-title { font-size: 1.05rem; font-weight: 700; color: #0C4A6E; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .card-header-flex { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+
+    .chart-and-legend { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .donut-chart {
+      width: 156px; height: 156px; border-radius: 50%;
+      background: conic-gradient(#10B981 0% 80%, #38BDF8 80% 90%, #F59E0B 90% 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.18);
+      flex-shrink: 0;
+    }
+    .donut-hole {
+      width: 104px; height: 104px; border-radius: 50%; background: #FFFFFF;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .donut-pct { font-size: 1.45rem; font-weight: 700; color: #059669; line-height: 1.1; }
+    .donut-label { font-size: 0.72rem; color: var(--text-muted); }
+    .progress-bars-stack { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 12px; }
+    .prog-label-row { display: flex; justify-content: space-between; font-size: 0.84rem; margin-bottom: 4px; font-weight: 600; }
+    .prog-track { width: 100%; height: 10px; background: #F1F5F9; border-radius: 99px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+    .fill-green { background: linear-gradient(90deg, #34D399, #10B981); }
+    .fill-blue { background: linear-gradient(90deg, #38BDF8, #0284C7); }
+    .fill-orange { background: linear-gradient(90deg, #FBBF24, #F59E0B); }
+
+    .visual-badges-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .v-badge-box {
+      background: #F8FAFC;
+      border: 1px solid #BAE6FD;
+      border-radius: 14px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .v-badge-box .v-ico { font-size: 24px; display: block; }
+    .v-badge-box .v-num { font-size: 1.35rem; font-weight: 700; color: #0C4A6E; }
+    .v-badge-box .v-lbl { font-size: 0.75rem; color: var(--text-secondary); }
+
+    .upcoming-item {
+      border: 1px solid var(--border-color); border-radius: 12px;
+      padding: 10px 14px; background: #F8FAFC; margin-bottom: 8px;
+    }
+
+    /* ==================== HELP CENTER ==================== */
+    .symbol-banner-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      padding: 12px 18px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+    }
+    .help-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 16px;
+    }
+    .help-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      border: 2px solid #FDE68A;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .help-card.helped { border-color: #6EE7B7; }
+    .help-card.resolved { border-color: #CBD5E1; opacity: 0.85; }
+    .speech-bubble {
+      background: #F8FAFC;
+      border-left: 4px solid #F59E0B;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      color: var(--text-main);
+    }
+    .helper-responses-box {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+    }
+
+    /* ==================== FORMS, BUTTONS & TABLES ==================== */
+    .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .form-group label { font-size: 0.84rem; font-weight: 600; color: var(--text-secondary); }
+    .req { color: var(--danger); }
+    input[type="text"], input[type="password"], input[type="url"],
+    input[type="date"], input[type="datetime-local"], select, textarea {
+      width: 100%; padding: 9px 12px; border: 1px solid #CBD5E1; border-radius: 10px;
+      font-family: inherit; font-size: 0.9rem; color: var(--text-main); background: #FFFFFF;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+    .input-readonly { background: #F1F5F9 !important; color: var(--text-muted) !important; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+    .btn {
+      border: none; border-radius: 11px; padding: 9px 15px; font-family: inherit;
+      font-size: 0.88rem; font-weight: 600; cursor: pointer; display: inline-flex;
+      align-items: center; justify-content: center; gap: 6px; transition: all 0.18s;
+    }
+    .btn-primary { background: var(--primary-blue); color: #FFFFFF; }
+    .btn-primary:hover { background: var(--primary-blue-hover); }
+    .btn-mint { background: var(--mint-green); color: #FFFFFF; }
+    .btn-mint:hover { background: var(--mint-green-dark); }
+    .btn-warning { background: var(--amber-warn); color: #FFFFFF; }
+    .btn-outline { background: #FFFFFF; border: 1px solid #CBD5E1; color: var(--text-secondary); }
+    .btn-outline:hover { background: #F8FAFC; color: var(--text-main); }
+    .btn-danger-soft { background: #FEE2E2; color: #B91C1C; }
+    .btn-block { width: 100%; }
+    .btn-lg { padding: 12px 18px; font-size: 0.95rem; }
+    .btn-sm { padding: 6px 11px; font-size: 0.78rem; border-radius: 9px; }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .badge-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; font-size: 0.76rem; font-weight: 600; }
+    .badge-mint { background: #D1FAE5; color: #065F46; }
+    .badge-blue { background: #E0F2FE; color: #0369A1; }
+    .bg-orange { background: #FEF3C7; color: #92400E; }
+
+    .status-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; font-size: 0.76rem; font-weight: 600; }
+    .status-pill.submitted { background: #D1FAE5; color: #065F46; }
+    .status-pill.in_progress { background: #E0F2FE; color: #075985; }
+    .status-pill.need_help { background: #FEF3C7; color: #92400E; }
+    .status-pill.pending { background: #F1F5F9; color: #475569; }
+
+    .teacher-subtabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .subtab-btn {
+      border: 1px solid #BAE6FD; background: #FFFFFF; padding: 9px 14px; border-radius: 12px;
+      font-family: inherit; font-size: 0.86rem; font-weight: 600; color: var(--text-secondary); cursor: pointer;
+    }
+    .subtab-btn.active { background: var(--primary-blue); color: #FFFFFF; border-color: var(--primary-blue); }
+
+    .checkbox-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 8px; max-height: 240px; overflow-y: auto; padding: 10px;
+      border: 1px solid var(--border-color); border-radius: 12px; background: #F8FAFC;
+    }
+    .checkbox-card {
+      display: flex; align-items: center; gap: 8px; background: #FFFFFF;
+      padding: 7px 10px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 0.8rem; cursor: pointer;
+    }
+    .table-responsive { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    .data-table th, .data-table td { padding: 9px 11px; border-bottom: 1px solid #E2E8F0; text-align: left; }
+    .data-table th { background: #F0F9FF; color: #0C4A6E; font-weight: 600; }
+
+    .history-list, .manage-tasks-list, .duty-history-list, .subjects-list {
+      display: flex; flex-direction: column; gap: 8px; max-height: 440px; overflow-y: auto;
+    }
+    .history-item, .manage-task-item {
+      padding: 10px 12px; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 0.83rem;
+    }
+
+    details.clean-details {
+      margin-top: 22px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 16px;
+    }
+    details.clean-details summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      list-style: none;
+    }
+
+    /* ==================== MODALS & TOASTS ==================== */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px); z-index: 200; display: flex;
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-box {
+      background: #FFFFFF; width: 100%; max-width: 520px; max-height: 90vh;
+      overflow-y: auto; border-radius: var(--radius-lg); padding: 22px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+    }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .modal-close { border: none; background: #F1F5F9; width: 32px; height: 32px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+    .modal-task-subtitle { background: #F0F9FF; color: #0369A1; padding: 8px 12px; border-radius: 10px; font-size: 0.86rem; font-weight: 600; margin-bottom: 12px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+    .dup-warning-box { background: #FEF3C7; border: 1px solid #F59E0B; color: #92400E; padding: 10px; border-radius: 10px; font-size: 0.83rem; margin-bottom: 10px; }
+    .preview-summary-box { background: #F8FAFC; border: 1px solid #CBD5E1; border-radius: 12px; padding: 12px; font-size: 0.87rem; display: flex; flex-direction: column; gap: 6px; }
+
+    .toast-container { position: fixed; bottom: 18px; right: 18px; z-index: 300; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: #0F172A; color: #FFFFFF; padding: 11px 16px; border-radius: 12px; font-size: 0.86rem; box-shadow: 0 8px 20px rgba(0,0,0,0.18); border-left: 5px solid #38BDF8; }
+    .toast.success { border-left-color: #10B981; }
+    .toast.error { border-left-color: #EF4444; }
+
+    .mt-8 { margin-top: 8px; } .mt-12 { margin-top: 12px; } .mt-16 { margin-top: 16px; } .mb-16 { margin-bottom: 16px; }
+    .text-muted { color: var(--text-muted); } .text-sm { font-size: 0.8rem; }
+
+    @media (max-width: 900px) {
+      .summary-grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .summary-grid-5 { grid-template-columns: repeat(3, 1fr); }
+      .dashboard-two-col { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .summary-grid-4 { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .summary-grid-5 { grid-template-columns: repeat(2, 1fr); }
+      .task-cards-grid, .help-cards-grid { grid-template-columns: 1fr; }
+      .form-row-2, .form-row-3, .visual-badges-3 { grid-template-columns: 1fr; }
+      .stat-card { padding: 12px; gap: 10px; }
+      .stat-icon { width: 40px; height: 40px; font-size: 20px; }
+      .stat-value { font-size: 1.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- ==================== LOGIN SCREEN ==================== -->
+  <div id="login-view" class="login-wrapper">
+    <div class="login-card">
+      <div class="brand-logo-circle">
+        <img src="ตราสัญลักษณ์ M.4_6 อังกฤษ–จีน.png" alt="โลโก้ M.4/6 English-Chinese" onerror="this.outerHTML='🤝'" />
+      </div>
+      <h1 class="brand-title">CLASS TOGETHER</h1>
+      <p class="brand-motto">“งานไม่ค้าง เพื่อนไม่ทิ้งกัน” • ม.4/6 (English–Chinese)</p>
+
+      <div class="role-tabs">
+        <button type="button" id="tab-login-student" class="role-tab active" onclick="switchLoginTab('student')">
+          🎓 นักเรียน
+        </button>
+        <button type="button" id="tab-login-teacher" class="role-tab" onclick="switchLoginTab('teacher')">
+          👩‍🏫 ครูที่ปรึกษา
+        </button>
+      </div>
+
+      <!-- Student Login Form -->
+      <form id="form-login-student" class="login-form" onsubmit="handleStudentLogin(event)">
+        <div class="form-group">
+          <label for="login-student-id">🆔 รหัสนักเรียน</label>
+          <input type="text" id="login-student-id" placeholder="กรอกรหัสประจำตัวนักเรียน" required />
+        </div>
+        <div class="form-group">
+          <label for="login-student-pin">🔑 รหัส PIN</label>
+          <input type="password" id="login-student-pin" placeholder="กรอกรหัสผ่าน / PIN" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">
+          🚀 เข้าสู่ระบบ
+        </button>
+      </form>
+
+      <!-- Teacher Login Form -->
+      <form id="form-login-teacher" class="login-form hidden" onsubmit="handleTeacherLogin(event)">
+        <div class="form-group">
+          <label for="login-teacher-user">👩‍🏫 ชื่อผู้ใช้ครู</label>
+          <input type="text" id="login-teacher-user" placeholder="กรอกชื่อผู้ใช้ครู" required />
+        </div>
+        <div class="form-group">
+          <label for="login-teacher-pass">🔑 รหัสผ่าน</label>
+          <input type="password" id="login-teacher-pass" placeholder="กรอกรหัสผ่าน" required />
+        </div>
+        <button type="submit" class="btn btn-mint btn-block btn-lg">
+          🔐 เข้าสู่ระบบครู
+        </button>
+      </form>
+
+      <div style="margin-top:16px; display:flex; justify-content:center;">
+        <button type="button" class="btn btn-outline btn-sm" style="font-size:0.75rem;" onclick="openModal('modal-gsheet-setup')">
+          ☁️ ตั้งค่าเชื่อมต่อ Google Sheets
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN APPLICATION SHELL ==================== -->
+  <div id="app-view" class="app-shell hidden">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="topbar-brand" onclick="navigateSection('default')">
+          <div class="brand-icon-sm" style="background:#FFFFFF; border:1px solid #BAE6FD; border-radius:50%; overflow:hidden;">
+            <img src="ตราสัญลักษณ์ M.4_6 อังกฤษ–จีน.png" alt="M.4/6" onerror="this.outerHTML='🤝'" />
+          </div>
+          <div>
+            <div class="topbar-title">CLASS TOGETHER <span style="font-size:0.78rem; color:#991B1B;">M.4/6</span></div>
+            <div class="topbar-sub">งานไม่ค้าง เพื่อนไม่ทิ้งกัน</div>
+          </div>
+        </div>
+
+        <!-- Clean Icon-First Navigation -->
+        <nav class="main-nav">
+          <button type="button" id="nav-student-home" class="nav-btn" onclick="navigateSection('student-home')">
+            📋 งานของฉัน
+          </button>
+          <button type="button" id="nav-class-dashboard" class="nav-btn" onclick="navigateSection('class-dashboard')">
+            📊 ห้องของเรา
+          </button>
+          <button type="button" id="nav-help-center" class="nav-btn" onclick="navigateSection('help-center')">
+            💛 ช่วยเพื่อน <span id="nav-help-badge" class="nav-badge hidden">0</span>
+          </button>
+          <button type="button" id="nav-duty-manager" class="nav-btn hidden" onclick="navigateSection('duty-manager')">
+            ✍️ เวรจดงาน
+          </button>
+          <button type="button" id="nav-teacher-dashboard" class="nav-btn hidden" onclick="navigateSection('teacher-dashboard')">
+            👩‍🏫 จัดการห้อง
+          </button>
+        </nav>
+
+        <!-- Compact Symbol Action Buttons on Top Right -->
+        <div class="topbar-tools">
+          <span id="topbar-user-name" class="user-chip">-</span>
+          <button type="button" class="icon-btn" onclick="syncFromGoogleSheet(true)" title="ซิงค์ข้อมูลล่าสุด">
+            🔄
+          </button>
+          <button type="button" id="btn-change-pin" class="icon-btn" onclick="openChangePinModal()" title="เปลี่ยนรหัส PIN">
+            🔑
+          </button>
+          <button type="button" class="icon-btn" onclick="openModal('modal-gsheet-setup')" title="เชื่อมต่อ Google Sheets">
+            ☁️
+          </button>
+          <button type="button" class="icon-btn danger" onclick="handleLogout()" title="ออกจากระบบ">
+            🚪
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <!-- ===================================================================
+           SECTION 1: STUDENT DASHBOARD (หน้านักเรียนแบบมองง่าย ใช้สัญลักษณ์)
+           =================================================================== -->
+      <section id="section-student-home" class="view-section hidden">
+        <!-- แถบต้อนรับกะทัดรัด -->
+        <div class="student-hero">
+          <div class="hero-user">
+            <div class="hero-avatar" style="border-radius:50%; overflow:hidden; border:2px solid #BAE6FD;">
+              <img src="ตราสัญลักษณ์ M.4_6 อังกฤษ–จีน.png" alt="M.4/6" onerror="this.outerHTML='🧑‍🎓'" />
+            </div>
+            <div>
+              <div class="hero-greeting">
+                <span id="student-welcome-title">สวัสดี ...</span>
+                <span id="student-grade-badge" class="badge-pill badge-blue">ม.4/6</span>
+                <span id="student-duty-badge" class="badge-pill badge-mint hidden">🌟 เวรสัปดาห์นี้</span>
+              </div>
+              <div class="hero-motto">🌱 งานของฉัน ฉันรับผิดชอบ • งานของเพื่อน เราช่วยกัน</div>
+            </div>
+          </div>
+          <div id="student-duty-cta" class="hidden">
+            <button type="button" class="btn btn-mint" onclick="navigateSection('duty-manager')">
+              ➕ จดงานใหม่ให้ห้อง
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 การ์ดสรุปสถานะ (คลิกที่การ์ดเพื่อกรองดูงานแต่ละสถานะได้ทันที) -->
+        <div class="summary-grid-4">
+          <div id="card-filter-all" class="stat-card stat-card-total active-filter" onclick="setStudentTaskFilter('all')">
+            <div class="stat-icon">📚</div>
+            <div>
+              <div id="my-stat-total" class="stat-value">0</div>
+              <div class="stat-label">งานทั้งหมด</div>
+            </div>
+          </div>
+          <div id="card-filter-submitted" class="stat-card stat-card-submitted" onclick="setStudentTaskFilter('submitted')">
+            <div class="stat-icon">✅</div>
+            <div>
+              <div id="my-stat-submitted" class="stat-value">0</div>
+              <div class="stat-label">ส่งแล้ว</div>
+            </div>
+          </div>
+          <div id="card-filter-in_progress" class="stat-card stat-card-progress" onclick="setStudentTaskFilter('in_progress')">
+            <div class="stat-icon">⏳</div>
+            <div>
+              <div id="my-stat-progress" class="stat-value">0</div>
+              <div class="stat-label">กำลังทำ</div>
+            </div>
+          </div>
+          <div id="card-filter-need_help" class="stat-card stat-card-help" onclick="setStudentTaskFilter('need_help')">
+            <div class="stat-icon">🙋</div>
+            <div>
+              <div id="my-stat-help" class="stat-value">0</div>
+              <div class="stat-label">ขอเพื่อนช่วย</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- แถบปุ่มเลือกวิชาแบบสัญลักษณ์ + ช่องค้นหา -->
+        <div class="quick-filter-bar">
+          <div id="student-subject-pills" class="subject-pills-wrap"></div>
+          <div class="compact-search">
+            <span class="compact-search-icon">🔍</span>
+            <input type="text" id="student-search-input" placeholder="ค้นหาชื่องาน..." oninput="renderStudentTasks()" />
+          </div>
+        </div>
+
+        <!-- การ์ดรายการงานทั้งหมด -->
+        <div id="student-tasks-container" class="task-cards-grid"></div>
+
+        <!-- ประวัติของฉัน (พับเก็บได้เพื่อให้หน้าจอสะอาดตา) -->
+        <details class="clean-details">
+          <summary>🕒 ดูประวัติการส่งงานของฉัน (คลิกเพื่อเปิด/ปิด)</summary>
+          <div id="student-history-list" class="history-list mt-12"></div>
+        </details>
+      </section>
+
+      <!-- ===================================================================
+           SECTION 2: CLASS DASHBOARD (ภาพรวมห้องของเราแบบ Visual)
+           =================================================================== -->
+      <section id="section-class-dashboard" class="view-section hidden">
+        <!-- 5 ตัวเลขภาพรวมด้วยสัญลักษณ์ -->
+        <div class="summary-grid-5">
+          <div class="mini-stat-card">
+            <span class="mini-stat-icon">👥</span>
+            <div id="cd-total-students" class="mini-stat-val">0</div>
+            <div class="mini-stat-label">สมาชิกห้อง</div>
+          </div>
+          <div class="mini-stat-card">
+            <span class="mini-stat-icon">📋</span>
+            <div id="cd-total-tasks" class="mini-stat-val">0</div>
+            <div class="mini-stat-label">งานทั้งหมด</div>
+          </div>
+          <div class="mini-stat-card mini-stat-green">
+            <span class="mini-stat-icon">✅</span>
+            <div id="cd-submitted-entries" class="mini-stat-val">0</div>
+            <div class="mini-stat-label">ส่งแล้ว</div>
+          </div>
+          <div class="mini-stat-card mini-stat-blue">
+            <span class="mini-stat-icon">⏳</span>
+            <div id="cd-progress-entries" class="mini-stat-val">0</div>
+            <div class="mini-stat-label">กำลังทำ</div>
+          </div>
+          <div class="mini-stat-card mini-stat-orange">
+            <span class="mini-stat-icon">🙋</span>
+            <div id="cd-help-entries" class="mini-stat-val">0</div>
+            <div class="mini-stat-label">รอเพื่อนช่วย</div>
+          </div>
+        </div>
+
+        <div class="dashboard-two-col">
+          <!-- กราฟวงกลมความก้าวหน้า -->
+          <div class="card">
+            <h3 class="card-title">📊 อัตราการส่งงานของห้องเรา</h3>
+            <div class="chart-and-legend">
+              <div id="cd-donut-chart" class="donut-chart">
+                <div class="donut-hole">
+                  <span id="cd-donut-center-pct" class="donut-pct">0%</span>
+                  <span class="donut-label">ส่งแล้ว</span>
+                </div>
+              </div>
+              <div class="progress-bars-stack">
+                <div>
+                  <div class="prog-label-row">
+                    <span>✅ ส่งงานแล้ว</span>
+                    <span id="cd-pct-submitted">0%</span>
+                  </div>
+                  <div class="prog-track"><div id="cd-bar-submitted" class="prog-fill fill-green" style="width:0%"></div></div>
+                </div>
+                <div>
+                  <div class="prog-label-row">
+                    <span>⏳ กำลังทำ</span>
+                    <span id="cd-pct-progress">0%</span>
+                  </div>
+                  <div class="prog-track"><div id="cd-bar-progress" class="prog-fill fill-blue" style="width:0%"></div></div>
+                </div>
+                <div>
+                  <div class="prog-label-row">
+                    <span>🙋 ยังไม่เสร็จ / รอเพื่อนช่วย</span>
+                    <span id="cd-pct-uncompleted">0%</span>
+                  </div>
+                  <div class="prog-track"><div id="cd-bar-uncompleted" class="prog-fill fill-orange" style="width:0%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ความสำเร็จของห้อง & ภารกิจเพื่อนช่วยเพื่อน -->
+          <div class="card">
+            <div class="card-header-flex">
+              <h3 class="card-title">🏆 พลังความสำเร็จของห้อง ม.4/6</h3>
+              <button type="button" class="btn btn-mint btn-sm" onclick="navigateSection('help-center')">💛 ไปช่วยเพื่อน →</button>
+            </div>
+            <div class="visual-badges-3">
+              <div class="v-badge-box">
+                <span class="v-ico">🌟</span>
+                <div id="ach-submitted-num" class="v-num">0</div>
+                <div class="v-lbl">รายการที่ส่งสำเร็จ</div>
+              </div>
+              <div class="v-badge-box">
+                <span class="v-ico">🔔</span>
+                <div id="cd-help-open" class="v-num">0</div>
+                <div class="v-lbl">รอเพื่อนมาช่วย</div>
+              </div>
+              <div class="v-badge-box">
+                <span class="v-ico">💝</span>
+                <div id="cd-help-resolved" class="v-num">0</div>
+                <div class="v-lbl">ช่วยเพื่อนสำเร็จ</div>
+              </div>
+            </div>
+
+            <div class="mt-16">
+              <div class="text-sm" style="font-weight:600; color:#047857; margin-bottom:6px;">✍️ เพื่อนเวรจดงานประจำสัปดาห์นี้:</div>
+              <div id="cd-duty-roster"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- งานใกล้กำหนดส่ง -->
+        <div class="card mt-16">
+          <h3 class="card-title">⏰ งานที่ใกล้กำหนดส่ง</h3>
+          <div id="cd-upcoming-tasks" class="task-cards-grid"></div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           SECTION 3: HELP CENTER (เพื่อนช่วยเพื่อน)
+           =================================================================== -->
+      <section id="section-help-center" class="view-section hidden">
+        <div class="symbol-banner-strip">
+          <div style="display:flex; gap:14px; flex-wrap:wrap; font-size:0.86rem; font-weight:600; color:#92400E;">
+            <span>🌱 ไม่ตำหนิกัน</span>
+            <span>💡 แนะนำวิธีคิด ไม่ทำแทนกัน</span>
+            <span>💝 กด “ฉันช่วยได้” เพื่อแบ่งปันความรู้</span>
+          </div>
+          <div class="btn-row">
+            <button type="button" id="hc-tab-active" class="btn btn-primary btn-sm" onclick="setHelpCenterFilter('active')">
+              🔔 เปิดอยู่ (<span id="hc-count-active">0</span>)
+            </button>
+            <button type="button" id="hc-tab-resolved" class="btn btn-outline btn-sm" onclick="setHelpCenterFilter('resolved')">
+              ✅ สำเร็จแล้ว (<span id="hc-count-resolved">0</span>)
+            </button>
+          </div>
+        </div>
+
+        <div id="help-center-list" class="help-cards-grid"></div>
+      </section>
+
+      <!-- ===================================================================
+           SECTION 4: STUDENT TASK MANAGERS (เวรจดงานประจำสัปดาห์)
+           =================================================================== -->
+      <section id="section-duty-manager" class="view-section hidden">
+        <div class="dashboard-two-col">
+          <div class="card">
+            <div class="card-header-flex">
+              <h3 id="duty-form-heading" class="card-title">➕ จดงานใหม่ให้ห้องเรียน</h3>
+              <button type="button" id="btn-reset-duty-form" class="btn btn-outline btn-sm hidden" onclick="resetTaskForm()">
+                ยกเลิกแก้ไข
+              </button>
+            </div>
+
+            <form id="form-manage-task" onsubmit="handlePreviewTaskBeforeSave(event)">
+              <input type="hidden" id="task-edit-id" value="" />
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="task-subject-id">📘 รายวิชา <span class="req">*</span></label>
+                  <select id="task-subject-id" required onchange="updateSelectedSubjectTeacherHint()"></select>
+                  <small id="task-subject-teacher-hint" style="color:#0369A1; font-size:0.78rem; font-weight:600; margin-top:2px;"></small>
+                </div>
+                <div class="form-group">
+                  <label for="task-target-group">👥 กลุ่มเป้าหมาย</label>
+                  <input type="text" id="task-target-group" value="ทุกคน" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="task-title">📌 ชื่องาน <span class="req">*</span></label>
+                <input type="text" id="task-title" placeholder="เช่น แบบฝึกหัดเรื่องเซต หน้า 24-25" required />
+              </div>
+
+              <div class="form-group">
+                <label for="task-description">📝 รายละเอียดสั้นๆ <span class="req">*</span></label>
+                <textarea id="task-description" rows="2" placeholder="ทำลงสมุด ข้อ 1-10..." required></textarea>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="task-assigned-date">📅 วันที่สั่งงาน <span class="req">*</span></label>
+                  <input type="date" id="task-assigned-date" required />
+                </div>
+                <div class="form-group">
+                  <label for="task-due-date">⏰ กำหนดส่ง <span class="req">*</span></label>
+                  <input type="datetime-local" id="task-due-date" required />
+                </div>
+              </div>
+
+              <div id="task-due-reason-group" class="form-group hidden">
+                <label for="task-due-change-reason">🔄 เหตุผลที่เลื่อนกำหนดส่ง</label>
+                <input type="text" id="task-due-change-reason" placeholder="เช่น ครูขยายเวลาให้ 1 วัน" />
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="task-attachment-url">🔗 ลิงก์ใบงาน (ถ้ามี)</label>
+                  <input type="url" id="task-attachment-url" placeholder="https://..." />
+                </div>
+                <div class="form-group">
+                  <label for="task-recorder-name">✍️ ผู้บันทึก</label>
+                  <input type="text" id="task-recorder-name" readonly class="input-readonly" />
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block btn-lg mt-8">
+                🔍 ตรวจสอบข้อมูลก่อนบันทึก
+              </button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">📋 รายการงานที่จดไว้แล้ว</h3>
+            <div id="duty-tasks-list" class="manage-tasks-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           SECTION 5: TEACHER DASHBOARD (ระบบสำหรับครูผู้ดูแล)
+           =================================================================== -->
+      <section id="section-teacher-dashboard" class="view-section hidden">
+        <div class="teacher-subtabs">
+          <button type="button" id="ttab-btn-tracking" class="subtab-btn active" onclick="switchTeacherTab('tracking')">🎯 ติดตามงาน</button>
+          <button type="button" id="ttab-btn-duty" class="subtab-btn" onclick="switchTeacherTab('duty')">🗓️ จัดเวรประจำสัปดาห์</button>
+          <button type="button" id="ttab-btn-tasks" class="subtab-btn" onclick="switchTeacherTab('tasks')">📝 จัดการงาน & วิชา</button>
+          <button type="button" id="ttab-btn-students" class="subtab-btn" onclick="switchTeacherTab('students')">🎓 รายชื่อนักเรียน & CSV</button>
+          <button type="button" id="ttab-btn-reports" class="subtab-btn" onclick="switchTeacherTab('reports')">📈 รายงาน & ส่งออก Excel</button>
+        </div>
+
+        <!-- TAB 1: TRACKING -->
+        <div id="ttab-tracking" class="teacher-tab-pane">
+          <div class="card">
+            <div class="card-header-flex">
+              <h3 class="card-title">🎯 ติดตามสถานะรายชิ้นงาน</h3>
+              <select id="teacher-track-task-select" style="max-width:340px;" onchange="renderTeacherTaskTracking()"></select>
+            </div>
+            <div id="teacher-tracking-detail" class="mt-12"></div>
+          </div>
+        </div>
+
+        <!-- TAB 2: WEEKLY DUTY -->
+        <div id="ttab-duty" class="teacher-tab-pane hidden">
+          <div class="dashboard-two-col">
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">🗓️ ตั้งเวรนักเรียนประจำสัปดาห์ (5–6 คน)</h3>
+                <button type="button" class="btn btn-mint btn-sm" onclick="autoSelectUnassignedDutyStudents()">
+                  ✨ สุ่ม/เลือก 5 คนที่ยังไม่เคยเป็นเวร
+                </button>
+              </div>
+              <form onsubmit="handleCreateWeeklyDuty(event)">
+                <div class="form-group">
+                  <label for="duty-week-label">ชื่อรอบสัปดาห์ <span class="req">*</span></label>
+                  <input type="text" id="duty-week-label" placeholder="เช่น สัปดาห์ที่ 3" required />
+                </div>
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="duty-start-date">วันเริ่ม <span class="req">*</span></label>
+                    <input type="date" id="duty-start-date" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="duty-end-date">วันสิ้นสุด <span class="req">*</span></label>
+                    <input type="date" id="duty-end-date" required />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>เลือกนักเรียน — <span id="duty-selected-count">เลือกแล้ว 0 คน</span></label>
+                  <div id="duty-student-checkboxes" class="checkbox-grid"></div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">💾 บันทึกตารางเวร</button>
+              </form>
+            </div>
+
+            <div class="stack-col">
+              <div class="card">
+                <h3 class="card-title">🔍 นักเรียนที่ยังไม่เคยเป็นเวร</h3>
+                <div id="duty-unassigned-list" class="demo-chips"></div>
+              </div>
+              <div class="card">
+                <h3 class="card-title">📅 ประวัติตารางเวร</h3>
+                <div id="duty-schedules-list" class="duty-history-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: SUBJECTS & TASKS -->
+        <div id="ttab-tasks" class="teacher-tab-pane hidden">
+          <div class="dashboard-two-col">
+            <div class="card">
+              <h3 class="card-title">📘 จัดการรายวิชา</h3>
+              <form class="mb-16" onsubmit="handleSaveSubject(event)">
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="sub-code">รหัสวิชา</label>
+                    <input type="text" id="sub-code" placeholder="ว31241" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="sub-name">ชื่อวิชา</label>
+                    <input type="text" id="sub-name" placeholder="ชีววิทยา 1" required />
+                  </div>
+                </div>
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="sub-teacher">ครูผู้สอน</label>
+                    <input type="text" id="sub-teacher" placeholder="ครูเมธาวี" />
+                  </div>
+                  <div class="form-group">
+                    <label for="sub-color">สีประจำวิชา</label>
+                    <input type="color" id="sub-color" value="#0284C7" style="height:40px; width:100%; border:1px solid #CBD5E1; border-radius:10px;" />
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary">➕ เพิ่มรายวิชา</button>
+              </form>
+              <div id="teacher-subjects-list" class="subjects-list"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">📝 จัดการงานทั้งหมด (ลบงานถาวร)</h3>
+                <button type="button" class="btn btn-mint btn-sm" onclick="navigateSection('duty-manager')">➕ เพิ่มงานใหม่</button>
+              </div>
+              <div id="teacher-all-tasks-list" class="manage-tasks-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: STUDENTS & CSV -->
+        <div id="ttab-students" class="teacher-tab-pane hidden">
+          <div class="dashboard-two-col">
+            <div class="stack-col">
+              <div class="card">
+                <h3 class="card-title">🎓 เพิ่ม / แก้ไขนักเรียน</h3>
+                <form onsubmit="handleSaveStudent(event)">
+                  <div class="form-row-2">
+                    <div class="form-group">
+                      <label for="stu-id">รหัสนักเรียน</label>
+                      <input type="text" id="stu-id" placeholder="6740613" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="stu-nick">ชื่อเล่น</label>
+                      <input type="text" id="stu-nick" placeholder="ต้นกล้า" required />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="stu-fullname">ชื่อ-นามสกุล</label>
+                    <input type="text" id="stu-fullname" placeholder="นายธนดล คนขยัน" required />
+                  </div>
+                  <div class="form-row-3">
+                    <div class="form-group">
+                      <label for="stu-grade">ชั้น</label>
+                      <input type="text" id="stu-grade" value="ม.4" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="stu-room">ห้อง</label>
+                      <input type="text" id="stu-room" value="6" required />
+                    </div>
+                    <div class="form-group">
+                      <label for="stu-pin">PIN</label>
+                      <input type="text" id="stu-pin" value="1234" required />
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">💾 บันทึก</button>
+                </form>
+              </div>
+
+              <div class="card">
+                <div class="card-header-flex">
+                  <h3 class="card-title">📂 นำเข้าไฟล์ CSV</h3>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="downloadSampleStudentCsv()">⬇️ ตัวอย่าง CSV</button>
+                </div>
+                <input type="file" id="csv-file-input" accept=".csv,text/csv" class="mb-16" onchange="handleCsvFileSelect(event)" />
+                <textarea id="csv-text-area" rows="2" placeholder="6740613,นายธนดล คนขยัน,ต้นกล้า,ม.4,6,1234"></textarea>
+                <button type="button" class="btn btn-mint btn-block mt-8" onclick="handleImportStudentCsv()">📥 นำเข้ารายชื่อ</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header-flex">
+                <h3 class="card-title">📋 รายชื่อนักเรียนทั้งหมด (<span id="stu-total-count">0</span> คน)</h3>
+                <button type="button" id="btn-clear-all-students" class="btn btn-danger-soft btn-sm" onclick="handleClearAllStudents()">
+                  🗑️ ล้างรายชื่อทั้งหมด
+                </button>
+              </div>
+              <div id="teacher-students-table-wrap" class="table-responsive"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: REPORTS -->
+        <div id="ttab-reports" class="teacher-tab-pane hidden">
+          <div class="card mb-16">
+            <div class="card-header-flex">
+              <h3 class="card-title">👩‍🎓 สรุปการส่งงานรายบุคคล & ส่งออกไฟล์</h3>
+              <div class="btn-row">
+                <button type="button" class="btn btn-primary btn-sm" onclick="exportStudentSummaryCsv()">📥 ส่งออกสรุปรายบุคคล (Excel CSV)</button>
+                <button type="button" class="btn btn-mint btn-sm" onclick="exportDetailedTasksCsv()">📥 ส่งออกรายละเอียดทุกงาน (CSV)</button>
+              </div>
+            </div>
+            <div id="teacher-student-report-wrap" class="table-responsive"></div>
+          </div>
+          <div class="card">
+            <h3 class="card-title">📊 สรุปรายวิชา</h3>
+            <div id="teacher-subject-report-wrap" class="table-responsive"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Modal: ตั้งค่าเชื่อมต่อ Google Sheets -->
+  <div id="modal-gsheet-setup" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>☁️ วิธีเชื่อมข้อมูลเข้า Google Sheet ในโฟลเดอร์</h3>
+        <button type="button" class="modal-close" onclick="closeModal('modal-gsheet-setup')">&times;</button>
+      </div>
+      <div class="preview-summary-box mb-16" style="font-size:0.83rem; background:#F0F9FF; border-color:#BAE6FD;">
+        <strong>📌 ข้อมูลจะวิ่งเข้าไฟล์ Google Sheet ได้อย่างไร? (ทำครั้งเดียว 3 ขั้นตอน):</strong>
+        <div>1️⃣ เปิดไฟล์ชีต <strong>“โครงงานคุณธรรม สร้างวินัย ใส่ใจหน้าที่”</strong> ในโฟลเดอร์ แล้วกดเมนูด้านบน <strong>ส่วนขยาย (Extensions) &gt; Apps Script</strong></div>
+        <div>2️⃣ คัดลอกโค้ดจากไฟล์ <code>Code.gs</code> ไปวางแทนที่โค้ดเดิม แล้วกดปุ่มสีน้ำเงิน <strong>การทำให้ใช้งานได้ (Deploy) &gt; รายการใหม่ &gt; เลือกประเภท “เว็บแอป (Web app)” &gt; ผู้มีสิทธิ์เข้าถึง: “ทุกคน (Anyone)”</strong></div>
+        <div>3️⃣ คัดลอกลิงก์ <strong>Web App URL</strong> ที่ได้ มาวางในช่องด้านล่างนี้ แล้วกด <strong>“💾 บันทึกและซิงค์”</strong> ระบบจะสร้างตารางทั้ง 9 แท็บและบันทึกข้อมูลทุกอย่างลงในชีตให้อัตโนมัติทันที!</div>
+      </div>
+      <div class="form-group">
+        <label for="gsheet-url-input">🔗 วางลิงก์ Web App URL ที่นี่ (ลงท้ายด้วย <code>/exec</code>)</label>
+        <input type="url" id="gsheet-url-input" placeholder="https://script.google.com/macros/s/xxxxxx/exec" />
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" onclick="saveGoogleSheetUrlAndSync()">💾 บันทึกและซิงค์</button>
+        <button type="button" class="btn btn-mint" onclick="pushLocalStateToGoogleSheet()">☁️ ส่งข้อมูลปัจจุบันเข้า Sheet ทันที</button>
+        <button type="button" class="btn btn-outline" onclick="copyStudentShareLink()">🔗 คัดลอกลิงก์ส่งให้นักเรียน</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: แจ้งเตือนเจ้าของงานเมื่อมีเพื่อนอาสาช่วยเหลือแล้ว! -->
+  <div id="modal-friend-helped-alert" class="modal-backdrop hidden">
+    <div class="modal-box" style="border: 3px solid #10B981; text-align: center;">
+      <div style="font-size: 3rem; line-height: 1; margin-bottom: 8px;">🎉💝</div>
+      <h3 style="color: #065F46; font-size: 1.35rem; margin-bottom: 6px;">เย้! มีเพื่อนมาช่วยคุณแล้ว!</h3>
+      <p class="text-muted text-sm mb-16">เพื่อนในห้องเห็นคำขอความช่วยเหลือของคุณ และอาสาเข้ามาช่วยแล้วนะ</p>
+      <div id="friend-helped-alert-list" style="text-align: left; display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px;"></div>
+      <div class="btn-row" style="justify-content: center;">
+        <button type="button" class="btn btn-mint btn-lg" onclick="acknowledgeFriendHelpAlert()">
+          👍 รับทราบ ขอบคุณเพื่อนมาก!
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: ขอความช่วยเหลือ (Need Help) -->
+  <div id="modal-need-help" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>🙋 ขอความช่วยเหลือจากเพื่อน</h3>
+        <button type="button" class="modal-close" onclick="closeModal('modal-need-help')">&times;</button>
+      </div>
+      <form onsubmit="submitNeedHelpForm(event)">
+        <input type="hidden" id="help-modal-task-id" />
+        <p id="help-modal-task-title" class="modal-task-subtitle"></p>
+        <div class="form-group">
+          <label for="help-reason-category">❓ ติดปัญหาเรื่องอะไร</label>
+          <select id="help-reason-category" required>
+            <option value="ไม่เข้าใจเนื้อหาหรือคำสั่งงาน">❓ ไม่เข้าใจเนื้อหาหรือคำสั่งงาน</option>
+            <option value="ไม่รู้จะเริ่มต้นทำงานอย่างไร">🧭 ไม่รู้จะเริ่มต้นทำงานอย่างไร</option>
+            <option value="มีงานหลายวิชาพร้อมกัน">📚 มีงานหลายวิชาพร้อมกัน</option>
+            <option value="ต้องการเพื่อนช่วยอธิบาย">💡 ต้องการเพื่อนช่วยอธิบาย</option>
+            <option value="มีปัญหาอื่น ๆ">💬 มีปัญหาอื่น ๆ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="help-details">💬 บอกเพื่อนเพิ่มเติม (ถ้ามี)</label>
+          <textarea id="help-details" rows="2" placeholder="เช่น งงข้อ 4 ครับ ใครทำเสร็จแล้วช่วยอธิบายหน่อยนะ"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="help-display-name">🏷️ ชื่อที่แสดง</label>
+          <input type="text" id="help-display-name" required />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modal-need-help')">ยกเลิก</button>
+          <button type="submit" class="btn btn-warning">💛 ส่งไปหน้าช่วยเพื่อน</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: อาสาช่วยเหลือเพื่อน ("ฉันช่วยได้") -->
+  <div id="modal-volunteer" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>💝 อาสาช่วยเพื่อน (“ฉันช่วยได้”)</h3>
+        <button type="button" class="modal-close" onclick="closeModal('modal-volunteer')">&times;</button>
+      </div>
+      <form onsubmit="submitVolunteerForm(event)">
+        <input type="hidden" id="vol-request-id" />
+        <p id="vol-request-summary" class="modal-task-subtitle"></p>
+        <div class="form-group">
+          <label for="vol-help-method">🛠️ วิธีที่จะช่วยเพื่อน</label>
+          <select id="vol-help-method" required>
+            <option value="อธิบายบทเรียน">📖 อธิบายบทเรียนให้ฟัง</option>
+            <option value="แนะนำวิธีทำงาน">💡 แนะนำขั้นตอนการทำ</option>
+            <option value="ช่วยวางแผน">🗓️ ช่วยวางแผนจัดลำดับงาน</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="vol-message">💬 ข้อความถึงเพื่อน <span class="req">*</span></label>
+          <textarea id="vol-message" rows="2" placeholder="เช่น เดี๋ยวพักเที่ยงเราเอาสมุดไปอธิบายวิธีคิดให้ดูนะ!" required></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modal-volunteer')">ยกเลิก</button>
+          <button type="submit" class="btn btn-mint">🤝 ยืนยันช่วยเพื่อน</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Preview ข้อมูลก่อนบันทึกงาน -->
+  <div id="modal-task-preview" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>🔍 ตรวจสอบข้อมูลก่อนบันทึก</h3>
+        <button type="button" class="modal-close" onclick="closeModal('modal-task-preview')">&times;</button>
+      </div>
+      <div id="task-preview-dup-warning" class="dup-warning-box hidden"></div>
+      <div id="task-preview-content" class="preview-summary-box"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeModal('modal-task-preview')">✏️ แก้ไข</button>
+        <button type="button" class="btn btn-primary" onclick="confirmSaveTaskFromPreview()">✅ ยืนยันบันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: เปลี่ยน PIN -->
+  <div id="modal-change-pin" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>🔑 เปลี่ยนรหัส PIN</h3>
+        <button type="button" class="modal-close" onclick="closeModal('modal-change-pin')">&times;</button>
+      </div>
+      <form onsubmit="submitChangePin(event)">
+        <div class="form-group">
+          <label for="cp-current-pin">รหัส PIN ปัจจุบัน <span class="req">*</span></label>
+          <input type="password" id="cp-current-pin" required />
+        </div>
+        <div class="form-group">
+          <label for="cp-new-pin">รหัส PIN ใหม่ (4 ตัวขึ้นไป) <span class="req">*</span></label>
+          <input type="password" id="cp-new-pin" minlength="4" required />
+        </div>
+        <div class="form-group">
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="cp-show-nickname" checked />
+            <span>แสดงชื่อเล่นของฉันเมื่อขอให้เพื่อนช่วย</span>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modal-change-pin')">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary">💾 บันทึก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // 📌 ลิงก์ Web App URL จาก Google Apps Script ของห้อง ม.4/6 (ฝังไว้ในโค้ดเรียบร้อยแล้ว)
+    const DEFAULT_GSHEET_URL = 'https://script.google.com/macros/s/AKfycbzWrMYvUdRHU6wr3o0eaTQpf1MQi8r0bgSEHT_jpJmpGyPMcieYvBaqAd-B09E-OG3TVw/exec';
+
+    const STORAGE_KEY = 'class_together_db_v1';
+    const GSHEET_URL_KEY = 'class_together_gsheet_url';
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('api')) {
+      localStorage.setItem(GSHEET_URL_KEY, urlParams.get('api').trim());
+    }
+
+    let gsheetApiUrl = localStorage.getItem(GSHEET_URL_KEY) || DEFAULT_GSHEET_URL;
+    const isEmbeddedAppsScript = typeof google !== 'undefined' && google.script && google.script.run;
+
+    function getBangkokDateString(offsetDays = 0) {
+      const d = new Date(Date.now() + offsetDays * 86400000);
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Bangkok', year: 'numeric', month: '2-digit', day: '2-digit'
+      }).formatToParts(d);
+      const y = parts.find(p => p.type === 'year').value;
+      const m = parts.find(p => p.type === 'month').value;
+      const day = parts.find(p => p.type === 'day').value;
+      return `${y}-${m}-${day}`;
+    }
+
+    function formatThaiDateTime(isoStr) {
+      if (!isoStr) return '-';
+      try {
+        const d = new Date(isoStr);
+        if (isNaN(d.getTime())) return String(isoStr).replace('T', ' ');
+        return d.toLocaleString('th-TH', {
+          timeZone: 'Asia/Bangkok', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+      } catch {
+        return String(isoStr);
+      }
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.textContent = message;
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }
+
+    function openModal(id) { document.getElementById(id)?.classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+
+    function createInitialDatabase() {
+      const now = new Date().toISOString();
+      return {
+        teachers: [
+          { username: 'teacher', full_name: 'ครูที่ปรึกษา ม.4/6', role: 'admin', password: 'teacher1234', created_at: now }
+        ],
+        students: [
+          { student_id: '6740601', full_name: 'นายกิตติพงศ์ ใจดี', nickname: 'กิต', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740602', full_name: 'นางสาวชนากานต์ รักเรียน', nickname: 'ฟ้า', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740603', full_name: 'นายณัฐวุฒิ มุ่งมั่น', nickname: 'ณัฐ', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740604', full_name: 'นางสาวธัญชนก สดใส', nickname: 'มิ้นต์', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740605', full_name: 'นายปภาวิน มีวินัย', nickname: 'วิน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740606', full_name: 'นางสาวพิชญาภา อารี', nickname: 'พิม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740607', full_name: 'นายภัทรพล ร่วมใจ', nickname: 'ภัทร', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740608', full_name: 'นางสาวลลิตา พากเพียร', nickname: 'ลิน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740609', full_name: 'นายศุภกร ช่วยเพื่อน', nickname: 'กร', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740610', full_name: 'นางสาวสิริยากร ตั้งใจ', nickname: 'เนย', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740611', full_name: 'นายอภิวิชญ์ ก้าวหน้า', nickname: 'โอม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '6740612', full_name: 'นางสาวอารยา สามัคคี', nickname: 'อาย', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now }
+        ],
+        subjects: [
+          { subject_id: '1', subject_code: 'ค31101', subject_name: 'คณิตศาสตร์', color_hex: '#0284C7', teacher_name: 'ครูสมชาย', is_active: '1' },
+          { subject_id: '2', subject_code: 'ท31101', subject_name: 'ภาษาไทย', color_hex: '#10B981', teacher_name: 'ครูสายใจ', is_active: '1' },
+          { subject_id: '3', subject_code: 'อ31101', subject_name: 'ภาษาอังกฤษ', color_hex: '#6366F1', teacher_name: 'ครูเจนนี่', is_active: '1' },
+          { subject_id: '4', subject_code: 'ว31201', subject_name: 'ฟิสิกส์', color_hex: '#F59E0B', teacher_name: 'ครูวิชัย', is_active: '1' },
+          { subject_id: '5', subject_code: 'ว31221', subject_name: 'เคมี', color_hex: '#EC4899', teacher_name: 'ครูนภา', is_active: '1' },
+          { subject_id: '6', subject_code: 'ว31181', subject_name: 'คอมพิวเตอร์', color_hex: '#14B8A6', teacher_name: 'ครูธีรภัทร', is_active: '1' }
+        ],
+        weeklyDuties: [
+          {
+            duty_id: '1',
+            week_label: 'สัปดาห์ที่ 1',
+            start_date: getBangkokDateString(-10),
+            end_date: getBangkokDateString(-4),
+            note: 'ปฏิบัติหน้าที่เรียบร้อย',
+            student_ids_json: JSON.stringify(['6740606', '6740607', '6740608', '6740609', '6740610']),
+            is_active: '1',
+            created_by: 'ครูที่ปรึกษา',
+            created_at: now
+          },
+          {
+            duty_id: '2',
+            week_label: 'สัปดาห์นี้',
+            start_date: getBangkokDateString(-2),
+            end_date: getBangkokDateString(5),
+            note: 'เวรจดงานประจำสัปดาห์',
+            student_ids_json: JSON.stringify(['6740601', '6740602', '6740603', '6740604', '6740605']),
+            is_active: '1',
+            created_by: 'ครูที่ปรึกษา',
+            created_at: now
+          }
+        ],
+        tasks: [
+          {
+            task_id: '1', subject_id: '1',
+            title: 'แบบฝึกหัดเรื่องเซต (หน้า 24-25)',
+            description: 'ทำลงสมุด ข้อ 1-10 วาดแผนภาพเวนน์ประกอบ',
+            assigned_date: getBangkokDateString(-3),
+            due_date: getBangkokDateString(1) + 'T16:00',
+            attachment_url: 'https://proj14.ipst.ac.th/',
+            target_group: 'ทุกคน', status: 'active', cancel_reason: '',
+            created_by_type: 'student_duty', created_by_id: '6740601',
+            created_by_name: 'กิต (เวร)',
+            due_date_history: '[]', created_at: now, updated_at: now
+          },
+          {
+            task_id: '2', subject_id: '4',
+            title: 'มายด์แมป การเคลื่อนที่แนวตรง',
+            description: 'สรุปสูตรลงกระดาษ A4 ตกแต่งให้สวยงาม',
+            assigned_date: getBangkokDateString(-3),
+            due_date: getBangkokDateString(2) + 'T16:30',
+            attachment_url: '', target_group: 'ทุกคน', status: 'active', cancel_reason: '',
+            created_by_type: 'student_duty', created_by_id: '6740602',
+            created_by_name: 'ฟ้า (เวร)',
+            due_date_history: JSON.stringify([
+              { old_due_date: getBangkokDateString(1) + 'T12:00', new_due_date: getBangkokDateString(2) + 'T16:30', changed_by: 'ฟ้า (เวร)', reason: 'ครูขยายเวลาส่ง 1 วัน' }
+            ]),
+            created_at: now, updated_at: now
+          },
+          {
+            task_id: '3', subject_id: '2',
+            title: 'วิเคราะห์วรรณคดีเรื่องอิเหนา',
+            description: 'เขียนคุณค่าด้านวรรณศิลป์และสังคม 1 หน้ากระดาษ',
+            assigned_date: getBangkokDateString(-2),
+            due_date: getBangkokDateString(4) + 'T12:00',
+            attachment_url: '', target_group: 'ทุกคน', status: 'active', cancel_reason: '',
+            created_by_type: 'teacher', created_by_id: 'teacher',
+            created_by_name: 'ครูที่ปรึกษา',
+            due_date_history: '[]', created_at: now, updated_at: now
+          },
+          {
+            task_id: '4', subject_id: '3',
+            title: 'เขียนพารากราฟ My Future Goal',
+            description: 'ความยาว 80-100 คำ พร้อมขีดเส้นใต้ Topic Sentence',
+            assigned_date: getBangkokDateString(-1),
+            due_date: getBangkokDateString(6) + 'T16:00',
+            attachment_url: '', target_group: 'ทุกคน', status: 'active', cancel_reason: '',
+            created_by_type: 'student_duty', created_by_id: '6740603',
+            created_by_name: 'ณัฐ (เวร)',
+            due_date_history: '[]', created_at: now, updated_at: now
+          },
+          {
+            task_id: '5', subject_id: '6',
+            title: 'วาดผังงาน Flowchart แก้ปัญหา',
+            description: 'เลือกปัญหาในชีวิตประจำวัน 1 เรื่อง',
+            assigned_date: getBangkokDateString(0),
+            due_date: getBangkokDateString(7) + 'T15:30',
+            attachment_url: '', target_group: 'ทุกคน', status: 'active', cancel_reason: '',
+            created_by_type: 'student_duty', created_by_id: '6740604',
+            created_by_name: 'มิ้นต์ (เวร)',
+            due_date_history: '[]', created_at: now, updated_at: now
+          }
+        ],
+        studentTasks: [
+          { student_id: '6740601', task_id: '1', status: 'submitted', submitted_at: now, updated_at: now },
+          { student_id: '6740601', task_id: '2', status: 'in_progress', submitted_at: '', updated_at: now },
+          { student_id: '6740601', task_id: '3', status: 'need_help', submitted_at: '', updated_at: now },
+          { student_id: '6740601', task_id: '4', status: 'submitted', submitted_at: now, updated_at: now },
+          { student_id: '6740601', task_id: '5', status: 'in_progress', submitted_at: '', updated_at: now },
+          { student_id: '6740602', task_id: '1', status: 'submitted', submitted_at: now, updated_at: now },
+          { student_id: '6740602', task_id: '2', status: 'submitted', submitted_at: now, updated_at: now },
+          { student_id: '6740602', task_id: '3', status: 'submitted', submitted_at: now, updated_at: now },
+          { student_id: '6740603', task_id: '1', status: 'need_help', submitted_at: '', updated_at: now },
+          { student_id: '6740603', task_id: '2', status: 'submitted', submitted_at: now, updated_at: now },
+          { student_id: '6740604', task_id: '1', status: 'submitted', submitted_at: now, updated_at: now },
+          { student_id: '6740605', task_id: '1', status: 'submitted', submitted_at: now, updated_at: now },
+          { student_id: '6740606', task_id: '2', status: 'need_help', submitted_at: '', updated_at: now }
+        ],
+        helpRequests: [
+          {
+            request_id: '1', student_id: '6740603', task_id: '1',
+            display_name: 'ณัฐ', reason_category: 'ไม่เข้าใจเนื้อหาหรือคำสั่งงาน',
+            details: 'งงเรื่องการแรเงาแผนภาพเวนน์ 3 เซต ข้อ 8-10 ครับ',
+            status: 'helped', created_at: now, resolved_at: ''
+          },
+          {
+            request_id: '2', student_id: '6740606', task_id: '2',
+            display_name: 'พิม', reason_category: 'ไม่รู้จะเริ่มต้นทำงานอย่างไร',
+            details: 'ขอไอเดียแบ่งหัวข้อผังความคิดความเร่งหน่อยค่ะ',
+            status: 'open', created_at: now, resolved_at: ''
+          },
+          {
+            request_id: '3', student_id: '6740601', task_id: '3',
+            display_name: 'กิต', reason_category: 'ต้องการเพื่อนช่วยอธิบาย',
+            details: 'อยากได้ตัวอย่างการยกบทประพันธ์มาอ้างอิงครับ',
+            status: 'open', created_at: now, resolved_at: ''
+          }
+        ],
+        helpResponses: [
+          {
+            response_id: '1', request_id: '1', helper_student_id: '6740602',
+            helper_name: 'ฟ้า', help_method: 'อธิบายบทเรียน',
+            message: 'เดี๋ยวพักเที่ยงเอาสมุดไปไล่สเต็ปให้ดูนะ!',
+            created_at: now
+          }
+        ],
+        activityLogs: []
+      };
+    }
+
+    let db = loadLocalDb();
+    let currentUser = null;
+    let currentSection = 'student-home';
+    let studentStatusFilter = 'all';
+    let studentSubjectFilter = 'all';
+    let helpCenterFilter = 'active';
+    let pendingTaskPreview = null;
+
+    function loadLocalDb() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.students)) return parsed;
+        }
+      } catch {}
+      const initial = createInitialDatabase();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
+      return initial;
+    }
+
+    function saveDbAndSync() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      pushLocalStateToGoogleSheet(true);
+    }
+
+    function logActivity(actorType, actorId, actorName, actionType, targetType, targetId, detailsObj = {}) {
+      const nextId = String((db.activityLogs.length || 0) + 1);
+      db.activityLogs.unshift({
+        log_id: nextId, actor_type: actorType, actor_id: String(actorId),
+        actor_name: String(actorName), action_type: actionType, target_type: targetType,
+        target_id: String(targetId), details_json: JSON.stringify(detailsObj),
+        created_at: new Date().toISOString()
+      });
+    }
+
+    // ==================== GOOGLE SHEETS SYNC ====================
+    async function syncFromGoogleSheet(showNotification = false) {
+      if (isEmbeddedAppsScript) {
+        google.script.run
+          .withSuccessHandler(res => {
+            if (res && res.ok && res.state && Array.isArray(res.state.students)) {
+              db = res.state;
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+              refreshAllViews();
+              if (showNotification) showToast('ซิงค์ข้อมูลจาก Google Sheets แล้ว', 'success');
+            }
+          })
+          .callServerApi({ action: 'getAllState' });
+        return;
+      }
+      if (!gsheetApiUrl) {
+        if (showNotification) showToast('อัปเดตข้อมูลล่าสุดเรียบร้อย', 'info');
+        refreshAllViews();
+        return;
+      }
+      try {
+        const res = await fetch(`${gsheetApiUrl}?action=getAllState`);
+        const data = await res.json();
+        if (data?.ok && Array.isArray(data.state?.students)) {
+          db = data.state;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+          refreshAllViews();
+          if (showNotification) showToast('ซิงค์กับ Google Sheets สำเร็จ!', 'success');
+        }
+      } catch {
+        if (showNotification) showToast('เชื่อมต่อ Google Sheets ไม่สำเร็จ กรุณาตรวจสอบ URL', 'error');
+      }
+    }
+
+    async function pushLocalStateToGoogleSheet(silent = false) {
+      if (isEmbeddedAppsScript) {
+        google.script.run.callServerApi({ action: 'syncStateFromClient', state: db });
+        if (!silent) showToast('บันทึกลง Google Sheets แล้ว', 'success');
+        return;
+      }
+      if (!gsheetApiUrl) {
+        if (!silent) showToast('กรุณาวาง Web App URL ก่อนครับ', 'error');
+        return;
+      }
+      try {
+        await fetch(gsheetApiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'syncStateFromClient', state: db })
+        });
+        if (!silent) showToast('อัปโหลดข้อมูลขึ้น Google Sheets สำเร็จ!', 'success');
+      } catch {
+        if (!silent) showToast('ไม่สามารถส่งข้อมูลไป Google Sheets ได้', 'error');
+      }
+    }
+
+    async function saveGoogleSheetUrlAndSync() {
+      gsheetApiUrl = document.getElementById('gsheet-url-input').value.trim();
+      localStorage.setItem(GSHEET_URL_KEY, gsheetApiUrl);
+      await syncFromGoogleSheet(true);
+      closeModal('modal-gsheet-setup');
+    }
+
+    function copyStudentShareLink() {
+      const val = document.getElementById('gsheet-url-input').value.trim() || gsheetApiUrl;
+      if (!val) return showToast('กรุณาวาง Web App URL ก่อนครับ', 'error');
+      const shareUrl = `${window.location.origin}${window.location.pathname}?api=${encodeURIComponent(val)}`;
+      navigator.clipboard.writeText(shareUrl).then(() => showToast('คัดลอกลิงก์ส่งให้นักเรียนแล้ว!', 'success'));
+    }
+
+    function isStudentCurrentlyOnDuty(studentId) {
+      const today = getBangkokDateString(0);
+      return (db.weeklyDuties || []).some(d => {
+        if (String(d.is_active) !== '1' || d.start_date > today || d.end_date < today) return false;
+        let ids = [];
+        try { ids = JSON.parse(d.student_ids_json || '[]'); } catch {}
+        return ids.includes(String(studentId));
+      });
+    }
+
+    function getActiveDutyRosters() {
+      const today = getBangkokDateString(0);
+      return (db.weeklyDuties || []).filter(d => String(d.is_active) === '1' && d.start_date <= today && d.end_date >= today)
+        .map(d => {
+          let ids = [];
+          try { ids = JSON.parse(d.student_ids_json || '[]'); } catch {}
+          const members = ids.map(id => db.students.find(s => String(s.student_id) === String(id))).filter(Boolean);
+          return { ...d, members };
+        });
+    }
+
+    // ==================== INIT & AUTH ====================
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('gsheet-url-input').value = gsheetApiUrl;
+      renderDemoChips();
+      syncFromGoogleSheet(false);
+    });
+
+    function renderDemoChips() {
+      const container = document.getElementById('demo-accounts-list');
+      if (!container) return;
+      const teacherBtn = `<button type="button" class="demo-chip teacher" onclick="fillDemoLogin('teacher', 'teacher', 'teacher1234')">👩‍🏫 ครู</button>`;
+      const stuBtns = (db.students || []).filter(s => String(s.is_active) === '1').map(s => {
+        const onDuty = isStudentCurrentlyOnDuty(s.student_id);
+        return `<button type="button" class="demo-chip ${onDuty ? 'duty' : ''}" onclick="fillDemoLogin('student', '${escapeHtml(s.student_id)}', '${escapeHtml(s.pin || '1234')}')">
+          ${onDuty ? '🌟' : '🎓'} ${escapeHtml(s.nickname)} (${escapeHtml(s.student_id)})
+        </button>`;
+      }).join('');
+      container.innerHTML = teacherBtn + stuBtns;
+    }
+
+    function switchLoginTab(role) {
+      const isStudent = role === 'student';
+      document.getElementById('tab-login-student').classList.toggle('active', isStudent);
+      document.getElementById('tab-login-teacher').classList.toggle('active', !isStudent);
+      document.getElementById('form-login-student').classList.toggle('hidden', !isStudent);
+      document.getElementById('form-login-teacher').classList.toggle('hidden', isStudent);
+    }
+
+    function fillDemoLogin(role, idOrUser, secret) {
+      switchLoginTab(role);
+      if (role === 'student') {
+        document.getElementById('login-student-id').value = idOrUser;
+        document.getElementById('login-student-pin').value = secret;
+      } else {
+        document.getElementById('login-teacher-user').value = idOrUser;
+        document.getElementById('login-teacher-pass').value = secret;
+      }
+      showToast(`เลือกบัญชี ${idOrUser} แล้ว กดปุ่มเข้าสู่ระบบได้เลย!`, 'info');
+    }
+
+    function handleStudentLogin(e) {
+      e.preventDefault();
+      const sid = document.getElementById('login-student-id').value.trim();
+      const pin = document.getElementById('login-student-pin').value.trim();
+      const stu = (db.students || []).find(s => String(s.student_id) === sid && String(s.is_active) === '1');
+      if (!stu || String(stu.pin) !== pin) return showToast('รหัสนักเรียนหรือ PIN ไม่ถูกต้อง', 'error');
+
+      const onDuty = isStudentCurrentlyOnDuty(stu.student_id);
+      currentUser = {
+        role: 'student', id: stu.student_id, student_id: stu.student_id,
+        full_name: stu.full_name, nickname: stu.nickname,
+        grade_level: stu.grade_level, classroom: stu.classroom,
+        show_nickname: String(stu.show_nickname) === '1', is_on_duty: onDuty
+      };
+      enterApp();
+    }
+
+    function handleTeacherLogin(e) {
+      e.preventDefault();
+      const uname = document.getElementById('login-teacher-user').value.trim();
+      const pass = document.getElementById('login-teacher-pass').value.trim();
+      const tc = (db.teachers || []).find(t => t.username === uname && String(t.password) === pass);
+      if (!tc) return showToast('ชื่อผู้ใช้หรือรหัสผ่านครูไม่ถูกต้อง', 'error');
+
+      currentUser = { role: 'teacher', id: tc.username, username: tc.username, full_name: tc.full_name, is_on_duty: true };
+      enterApp();
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      document.getElementById('app-view').classList.add('hidden');
+      document.getElementById('login-view').classList.remove('hidden');
+      renderDemoChips();
+    }
+
+    function enterApp() {
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('app-view').classList.remove('hidden');
+
+      const isTeacher = currentUser.role === 'teacher';
+      currentUser.is_on_duty = isTeacher || isStudentCurrentlyOnDuty(currentUser.student_id);
+
+      document.getElementById('topbar-user-name').textContent = isTeacher
+        ? `👩‍🏫 ครูที่ปรึกษา`
+        : `${currentUser.is_on_duty ? '🌟' : '🎓'} ${currentUser.nickname}`;
+
+      document.getElementById('nav-student-home').classList.toggle('hidden', isTeacher);
+      document.getElementById('btn-change-pin').classList.toggle('hidden', isTeacher);
+      document.getElementById('nav-duty-manager').classList.toggle('hidden', !currentUser.is_on_duty);
+      document.getElementById('nav-teacher-dashboard').classList.toggle('hidden', !isTeacher);
+
+      populateSubjectControls();
+      updateHelpCenterBadge();
+      navigateSection(isTeacher ? 'teacher-dashboard' : 'student-home');
+      if (!isTeacher) {
+        checkFriendHelpNotifications(false);
+      }
+    }
+
+    function refreshAllViews() {
+      renderDemoChips();
+      if (!currentUser) return;
+      if (currentUser.role === 'student') {
+        currentUser.is_on_duty = isStudentCurrentlyOnDuty(currentUser.student_id);
+        checkFriendHelpNotifications(false);
+      }
+      populateSubjectControls();
+      updateHelpCenterBadge();
+      navigateSection(currentSection);
+    }
+
+    let pendingNotifiedResponseIds = [];
+
+    function checkFriendHelpNotifications(forceShowAllMyHelped = false, specificTaskId = null) {
+      if (!currentUser || currentUser.role !== 'student') return;
+      const seenKey = `ct_seen_help_${currentUser.student_id}`;
+      let seenIds = [];
+      try { seenIds = JSON.parse(localStorage.getItem(seenKey) || '[]'); } catch { seenIds = []; }
+
+      // ค้นหาคำขอความช่วยเหลือของนักเรียนที่ล็อกอินอยู่ ซึ่งมีเพื่อนมาตอบอาสาช่วยแล้ว
+      const myHelpedRequests = (db.helpRequests || []).filter(hr => {
+        if (String(hr.student_id) !== String(currentUser.student_id)) return false;
+        if (specificTaskId && String(hr.task_id) !== String(specificTaskId)) return false;
+        return hr.status !== 'resolved';
+      });
+
+      const itemsToShow = [];
+      const newResponseIds = [];
+
+      myHelpedRequests.forEach(hr => {
+        const resps = (db.helpResponses || []).filter(r => String(r.request_id) === String(hr.request_id));
+        if (resps.length === 0) return;
+        const unseenResps = forceShowAllMyHelped
+          ? resps
+          : resps.filter(r => !seenIds.includes(String(r.response_id)));
+
+        if (unseenResps.length > 0) {
+          const task = (db.tasks || []).find(t => String(t.task_id) === String(hr.task_id)) || { title: 'งานที่ขอความช่วยเหลือ', subject_id: '1' };
+          const sub = (db.subjects || []).find(s => String(s.subject_id) === String(task.subject_id)) || { subject_name: 'รายวิชา', color_hex: '#10B981' };
+          itemsToShow.push({ hr, task, sub, responses: resps });
+          unseenResps.forEach(r => newResponseIds.push(String(r.response_id)));
+        }
+      });
+
+      if (itemsToShow.length === 0) return;
+      pendingNotifiedResponseIds = Array.from(new Set([...seenIds, ...newResponseIds]));
+
+      const alertListEl = document.getElementById('friend-helped-alert-list');
+      if (alertListEl) {
+        alertListEl.innerHTML = itemsToShow.map(item => `
+          <div style="background:#ECFDF5; border:1px solid #6EE7B7; border-radius:14px; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;">
+              <span class="subject-tag" style="background:${escapeHtml(item.sub.color_hex)}">📘 ${escapeHtml(item.sub.subject_name)}</span>
+              <span class="badge-pill badge-mint">💝 เพื่อนมาช่วยแล้ว!</span>
+            </div>
+            <div style="font-weight:700; color:#0F172A; margin-bottom:8px;">📌 ${escapeHtml(item.task.title)}</div>
+            ${item.responses.map(rs => `
+              <div style="background:#FFFFFF; border-radius:10px; padding:10px 12px; margin-top:6px; border:1px solid #A7F3D0;">
+                <div style="font-weight:700; color:#047857;">🤝 เพื่อนที่อาสาช่วย: ${escapeHtml(rs.helper_name)} <span class="badge-pill badge-blue" style="margin-left:4px;">${escapeHtml(rs.help_method)}</span></div>
+                <div style="margin-top:4px; color:#1E293B;">💬 ข้อความจากเพื่อน: “${escapeHtml(rs.message)}”</div>
+              </div>
+            `).join('')}
+          </div>
+        `).join('');
+      }
+
+      openModal('modal-friend-helped-alert');
+    }
+
+    function acknowledgeFriendHelpAlert() {
+      if (currentUser && currentUser.role === 'student') {
+        const seenKey = `ct_seen_help_${currentUser.student_id}`;
+        localStorage.setItem(seenKey, JSON.stringify(pendingNotifiedResponseIds));
+      }
+      closeModal('modal-friend-helped-alert');
+    }
+
+    function populateSubjectControls() {
+      const activeSubs = (db.subjects || []).filter(s => String(s.is_active) === '1');
+
+      // Render visual subject pills for Student view (with small teacher name)
+      const pillsWrap = document.getElementById('student-subject-pills');
+      if (pillsWrap) {
+        const allBtn = `<button type="button" class="subj-pill ${studentSubjectFilter === 'all' ? 'active' : ''}" onclick="setStudentSubjectFilter('all')">📚 ทุกวิชา</button>`;
+        const subBtns = activeSubs.map(s => `
+          <button type="button" class="subj-pill ${String(studentSubjectFilter) === String(s.subject_id) ? 'active' : ''}" onclick="setStudentSubjectFilter('${escapeHtml(s.subject_id)}')">
+            <span class="subj-dot" style="background:${escapeHtml(s.color_hex)}"></span>
+            <span>${escapeHtml(s.subject_name)} ${s.teacher_name ? `<small style="opacity:0.85; font-weight:400;">(${escapeHtml(s.teacher_name)})</small>` : ''}</span>
+          </button>
+        `).join('');
+        pillsWrap.innerHTML = allBtn + subBtns;
+      }
+
+      // Duty form subject select (with teacher name in option + small hint below)
+      const dutySub = document.getElementById('task-subject-id');
+      if (dutySub) {
+        dutySub.innerHTML = activeSubs.map(s =>
+          `<option value="${s.subject_id}">${escapeHtml(s.subject_name)} (${escapeHtml(s.subject_code)})${s.teacher_name ? ' • 👩‍🏫 ' + escapeHtml(s.teacher_name) : ''}</option>`
+        ).join('');
+        updateSelectedSubjectTeacherHint();
+      }
+    }
+
+    function updateSelectedSubjectTeacherHint() {
+      const dutySub = document.getElementById('task-subject-id');
+      const hintEl = document.getElementById('task-subject-teacher-hint');
+      if (!dutySub || !hintEl) return;
+      const subObj = (db.subjects || []).find(s => String(s.subject_id) === String(dutySub.value));
+      if (subObj && subObj.teacher_name) {
+        hintEl.textContent = `👩‍🏫 ครูผู้สอนวิชานี้: ${subObj.teacher_name}`;
+      } else {
+        hintEl.textContent = '👩‍🏫 ครูผู้สอนวิชานี้: ไม่ได้ระบุ';
+      }
+    }
+
+    function setStudentSubjectFilter(subId) {
+      studentSubjectFilter = subId;
+      populateSubjectControls();
+      renderStudentTasks();
+    }
+
+    function setStudentTaskFilter(statusVal) {
+      studentStatusFilter = statusVal;
+      ['all', 'submitted', 'in_progress', 'need_help'].forEach(k => {
+        document.getElementById(`card-filter-${k}`)?.classList.toggle('active-filter', k === statusVal);
+      });
+      renderStudentTasks();
+    }
+
+    function updateHelpCenterBadge() {
+      const openCount = (db.helpRequests || []).filter(r => r.status === 'open').length;
+      const badge = document.getElementById('nav-help-badge');
+      if (badge) {
+        badge.textContent = openCount;
+        badge.classList.toggle('hidden', openCount === 0);
+      }
+    }
+
+    function navigateSection(sec) {
+      if (sec === 'default') sec = currentUser?.role === 'teacher' ? 'teacher-dashboard' : 'student-home';
+      currentSection = sec;
+      ['student-home', 'class-dashboard', 'help-center', 'duty-manager', 'teacher-dashboard'].forEach(s => {
+        document.getElementById(`section-${s}`)?.classList.toggle('hidden', s !== sec);
+        document.getElementById(`nav-${s}`)?.classList.toggle('active', s === sec);
+      });
+
+      if (sec === 'student-home') renderStudentDashboard();
+      if (sec === 'class-dashboard') renderClassDashboard();
+      if (sec === 'help-center') renderHelpCenter();
+      if (sec === 'duty-manager') initDutyManager();
+      if (sec === 'teacher-dashboard') renderTeacherDashboard();
+    }
+
+    // ==================== SECTION 1: VISUAL STUDENT DASHBOARD ====================
+    function renderStudentDashboard() {
+      if (!currentUser || currentUser.role !== 'student') return;
+      const onDuty = isStudentCurrentlyOnDuty(currentUser.student_id);
+      currentUser.is_on_duty = onDuty;
+
+      document.getElementById('student-welcome-title').textContent = `สวัสดี ${currentUser.nickname}!`;
+      document.getElementById('student-grade-badge').textContent = `ม.4/${currentUser.classroom}`;
+      document.getElementById('student-duty-badge').classList.toggle('hidden', !onDuty);
+      document.getElementById('student-duty-cta').classList.toggle('hidden', !onDuty);
+      document.getElementById('nav-duty-manager').classList.toggle('hidden', !onDuty);
+
+      const activeSubMap = {};
+      (db.subjects || []).forEach(s => { if (String(s.is_active) === '1') activeSubMap[String(s.subject_id)] = s; });
+
+      const activeTasks = (db.tasks || []).filter(t => t.status !== 'cancelled' && activeSubMap[String(t.subject_id)]);
+      let subCount = 0, progCount = 0, helpCount = 0;
+      activeTasks.forEach(t => {
+        const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(currentUser.student_id) && String(st.task_id) === String(t.task_id));
+        const st = rec ? rec.status : 'pending';
+        if (st === 'submitted') subCount++;
+        else if (st === 'in_progress') progCount++;
+        else if (st === 'need_help') helpCount++;
+      });
+
+      document.getElementById('my-stat-total').textContent = activeTasks.length;
+      document.getElementById('my-stat-submitted').textContent = subCount;
+      document.getElementById('my-stat-progress').textContent = progCount;
+      document.getElementById('my-stat-help').textContent = helpCount;
+
+      renderStudentTasks();
+      renderStudentPersonalHistory();
+    }
+
+    function renderStudentTasks() {
+      if (!currentUser || currentUser.role !== 'student') return;
+      const container = document.getElementById('student-tasks-container');
+      const searchQ = (document.getElementById('student-search-input')?.value || '').trim().toLowerCase();
+
+      const subMap = {};
+      (db.subjects || []).forEach(s => { if (String(s.is_active) === '1') subMap[String(s.subject_id)] = s; });
+
+      const tasks = (db.tasks || [])
+        .filter(t => t.status !== 'cancelled' && subMap[String(t.subject_id)])
+        .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)))
+        .map(t => {
+          const sub = subMap[String(t.subject_id)];
+          const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(currentUser.student_id) && String(st.task_id) === String(t.task_id));
+          return { ...t, sub, my_status: rec ? rec.status : 'pending', my_submitted_at: rec?.submitted_at || '' };
+        })
+        .filter(t => {
+          if (studentSubjectFilter !== 'all' && String(t.subject_id) !== String(studentSubjectFilter)) return false;
+          if (studentStatusFilter !== 'all' && t.my_status !== studentStatusFilter) return false;
+          if (searchQ) {
+            const hay = `${t.title} ${t.description} ${t.sub.subject_name} ${t.sub.teacher_name || ''}`.toLowerCase();
+            if (!hay.includes(searchQ)) return false;
+          }
+          return true;
+        });
+
+      if (tasks.length === 0) {
+        container.innerHTML = `<div class="card" style="grid-column:1/-1; text-align:center; padding:32px; color:var(--text-muted);">✨ ไม่มีรายการงานในหมวดนี้</div>`;
+        return;
+      }
+
+      container.innerHTML = tasks.map(t => {
+        let hist = [];
+        try { hist = JSON.parse(t.due_date_history || '[]'); } catch {}
+        const lastHist = hist.length > 0 ? hist[hist.length - 1] : null;
+
+        // ตรวจสอบว่างานนี้เจ้าของขอความช่วยเหลือไว้แล้วมีเพื่อนมาช่วยหรือยัง
+        const myHr = (db.helpRequests || []).find(hr => String(hr.student_id) === String(currentUser.student_id) && String(hr.task_id) === String(t.task_id) && hr.status !== 'resolved');
+        const myHrResponses = myHr ? (db.helpResponses || []).filter(r => String(r.request_id) === String(myHr.request_id)) : [];
+
+        return `
+          <article class="task-card status-${escapeHtml(t.my_status)}">
+            <div>
+              <!-- แถวบน: ป้ายวิชา + ชื่อครูประจำวิชา + วันกำหนดส่ง -->
+              <div class="task-top-row">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <span class="subject-tag" style="background:${escapeHtml(t.sub.color_hex)}">
+                    📘 ${escapeHtml(t.sub.subject_name)}
+                  </span>
+                  <span class="sym-chip" style="background:#F0F9FF; color:#0369A1; font-weight:600;" title="ครูประจำวิชา">
+                    👩‍🏫 ${escapeHtml(t.sub.teacher_name || 'ไม่ระบุครู')}
+                  </span>
+                </div>
+                <span class="due-badge" title="กำหนดส่ง">
+                  ⏰ ${escapeHtml(formatThaiDateTime(t.due_date))}
+                </span>
+              </div>
+
+              <!-- ชื่องานและรายละเอียด -->
+              <h4 class="task-title">${escapeHtml(t.title)}</h4>
+              <p class="task-desc">${escapeHtml(t.description)}</p>
+
+              <!-- สัญลักษณ์แทนข้อความยาวๆ -->
+              <div class="symbol-meta-row">
+                <span class="sym-chip" title="ผู้จดงาน">✍️ ${escapeHtml(t.created_by_name)}</span>
+                ${t.attachment_url ? `<a class="sym-chip link" href="${escapeHtml(t.attachment_url)}" target="_blank" rel="noopener">🔗 ใบงาน/ลิงก์</a>` : ''}
+                ${lastHist ? `<span class="sym-chip warn" title="เดิม: ${escapeHtml(lastHist.old_due_date)}">🔄 เลื่อนส่ง (${escapeHtml(lastHist.reason)})</span>` : ''}
+                ${t.my_status === 'submitted' && t.my_submitted_at ? `<span class="sym-chip done">✔️ ส่งเมื่อ ${escapeHtml(formatThaiDateTime(t.my_submitted_at))}</span>` : ''}
+                ${myHrResponses.length > 0 ? `<button type="button" class="sym-chip done" style="border:1px solid #34D399; cursor:pointer;" onclick="checkFriendHelpNotifications(true, '${escapeHtml(t.task_id)}')">💝 มีเพื่อนมาช่วยแล้ว (${myHrResponses.length}) คลิกดูข้อความ</button>` : ''}
+              </div>
+            </div>
+
+            <!-- 3 ปุ่มสัญลักษณ์ขนาดใหญ่ กดง่ายในคลิกเดียว -->
+            <div class="task-status-buttons">
+              <button type="button" class="status-action-btn btn-stat-submitted ${t.my_status === 'submitted' ? 'active' : ''}" onclick="updateMyTaskStatus('${escapeHtml(t.task_id)}', 'submitted')">
+                <span class="btn-ico">✅</span>
+                <span class="btn-txt">ส่งแล้ว</span>
+              </button>
+              <button type="button" class="status-action-btn btn-stat-progress ${t.my_status === 'in_progress' ? 'active' : ''}" onclick="updateMyTaskStatus('${escapeHtml(t.task_id)}', 'in_progress')">
+                <span class="btn-ico">⏳</span>
+                <span class="btn-txt">กำลังทำ</span>
+              </button>
+              <button type="button" class="status-action-btn btn-stat-help ${t.my_status === 'need_help' ? 'active' : ''}" onclick="openNeedHelpModal('${escapeHtml(t.task_id)}')">
+                <span class="btn-ico">🙋</span>
+                <span class="btn-txt">ช่วยด้วย</span>
+              </button>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    function updateMyTaskStatus(taskId, newStatus) {
+      if (!currentUser || currentUser.role !== 'student') return;
+      const now = new Date().toISOString();
+      const idx = db.studentTasks.findIndex(st => String(st.student_id) === String(currentUser.student_id) && String(st.task_id) === String(taskId));
+      const submittedAt = newStatus === 'submitted' ? now : '';
+
+      if (idx >= 0) {
+        db.studentTasks[idx].status = newStatus;
+        db.studentTasks[idx].submitted_at = submittedAt;
+        db.studentTasks[idx].updated_at = now;
+      } else {
+        db.studentTasks.push({
+          student_id: String(currentUser.student_id), task_id: String(taskId),
+          status: newStatus, submitted_at: submittedAt, updated_at: now
+        });
+      }
+
+      if (newStatus === 'submitted') {
+        db.helpRequests.forEach(hr => {
+          if (String(hr.student_id) === String(currentUser.student_id) && String(hr.task_id) === String(taskId) && hr.status !== 'resolved') {
+            hr.status = 'resolved';
+            hr.resolved_at = now;
+          }
+        });
+      }
+
+      const taskObj = db.tasks.find(t => String(t.task_id) === String(taskId));
+      logActivity('student', currentUser.student_id, currentUser.full_name, 'UPDATE_TASK_STATUS', 'Task', taskId, {
+        task_title: taskObj ? taskObj.title : taskId, new_status: newStatus
+      });
+      saveDbAndSync();
+      renderStudentDashboard();
+      updateHelpCenterBadge();
+      showToast(newStatus === 'submitted' ? '✅ บันทึกส่งงานแล้ว!' : '⏳ อัปเดตเป็นกำลังทำ!', 'success');
+    }
+
+    function openNeedHelpModal(taskId) {
+      const task = db.tasks.find(t => String(t.task_id) === String(taskId));
+      if (!task) return;
+      document.getElementById('help-modal-task-id').value = task.task_id;
+      document.getElementById('help-modal-task-title').textContent = `📌 ${task.title}`;
+      document.getElementById('help-details').value = '';
+      document.getElementById('help-display-name').value = currentUser.show_nickname ? currentUser.nickname : 'เพื่อน ม.4/6';
+      openModal('modal-need-help');
+    }
+
+    function submitNeedHelpForm(e) {
+      e.preventDefault();
+      const taskId = document.getElementById('help-modal-task-id').value;
+      const reason_category = document.getElementById('help-reason-category').value;
+      const details = document.getElementById('help-details').value.trim();
+      const display_name = document.getElementById('help-display-name').value.trim();
+      const now = new Date().toISOString();
+
+      updateMyTaskStatus(taskId, 'need_help');
+
+      const existing = db.helpRequests.find(hr => String(hr.student_id) === String(currentUser.student_id) && String(hr.task_id) === String(taskId) && hr.status !== 'resolved');
+      if (existing) {
+        existing.reason_category = reason_category;
+        existing.details = details;
+        existing.display_name = display_name;
+      } else {
+        db.helpRequests.unshift({
+          request_id: String((db.helpRequests.length || 0) + 1),
+          student_id: String(currentUser.student_id), task_id: String(taskId),
+          display_name, reason_category, details, status: 'open', created_at: now, resolved_at: ''
+        });
+      }
+
+      saveDbAndSync();
+      closeModal('modal-need-help');
+      renderStudentDashboard();
+      updateHelpCenterBadge();
+      showToast('🙋 ส่งคำขอไปที่หน้า "💛 ช่วยเพื่อน" แล้ว!', 'success');
+    }
+
+    function renderStudentPersonalHistory() {
+      const container = document.getElementById('student-history-list');
+      if (!container) return;
+      const myLogs = (db.activityLogs || []).filter(l => String(l.actor_id) === String(currentUser.student_id)).slice(0, 15);
+      if (myLogs.length === 0) {
+        container.innerHTML = `<div class="text-muted text-sm">ยังไม่มีประวัติ</div>`;
+        return;
+      }
+      container.innerHTML = myLogs.map(l => {
+        let d = {};
+        try { d = JSON.parse(l.details_json || '{}'); } catch {}
+        return `<div class="history-item">
+          <strong>${escapeHtml(d.task_title || d.title || l.action_type)}</strong>
+          <span class="text-muted text-sm"> • 🕒 ${escapeHtml(formatThaiDateTime(l.created_at))}</span>
+        </div>`;
+      }).join('');
+    }
+
+    // ==================== SECTION 2: CLASS DASHBOARD ====================
+    function renderClassDashboard() {
+      const activeStudents = (db.students || []).filter(s => String(s.is_active) === '1');
+      const subMap = {};
+      (db.subjects || []).forEach(s => { if (String(s.is_active) === '1') subMap[String(s.subject_id)] = s; });
+      const activeTasks = (db.tasks || []).filter(t => t.status !== 'cancelled' && subMap[String(t.subject_id)])
+        .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)));
+
+      const totalStudents = activeStudents.length;
+      const totalTasks = activeTasks.length;
+      const totalPossible = totalStudents * totalTasks;
+
+      let submittedEntries = 0, inProgressEntries = 0, needHelpEntries = 0;
+      activeTasks.forEach(t => {
+        activeStudents.forEach(s => {
+          const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(s.student_id) && String(st.task_id) === String(t.task_id));
+          const status = rec ? rec.status : 'pending';
+          if (status === 'submitted') submittedEntries++;
+          else if (status === 'in_progress') inProgressEntries++;
+          else if (status === 'need_help') needHelpEntries++;
+        });
+      });
+
+      const submittedPct = totalPossible > 0 ? Math.round((submittedEntries / totalPossible) * 100) : 0;
+      const inProgressPct = totalPossible > 0 ? Math.round((inProgressEntries / totalPossible) * 100) : 0;
+      const uncompPct = totalPossible > 0 ? Math.max(0, 100 - submittedPct - inProgressPct) : 0;
+
+      document.getElementById('cd-total-students').textContent = totalStudents;
+      document.getElementById('cd-total-tasks').textContent = totalTasks;
+      document.getElementById('cd-submitted-entries').textContent = submittedEntries;
+      document.getElementById('cd-progress-entries').textContent = inProgressEntries;
+      document.getElementById('cd-help-entries').textContent = needHelpEntries;
+
+      document.getElementById('cd-donut-center-pct').textContent = `${submittedPct}%`;
+      document.getElementById('cd-pct-submitted').textContent = `${submittedPct}%`;
+      document.getElementById('cd-pct-progress').textContent = `${inProgressPct}%`;
+      document.getElementById('cd-pct-uncompleted').textContent = `${uncompPct}%`;
+
+      document.getElementById('cd-bar-submitted').style.width = `${submittedPct}%`;
+      document.getElementById('cd-bar-progress').style.width = `${inProgressPct}%`;
+      document.getElementById('cd-bar-uncompleted').style.width = `${uncompPct}%`;
+
+      const stop1 = submittedPct;
+      const stop2 = Math.min(100, submittedPct + inProgressPct);
+      document.getElementById('cd-donut-chart').style.background =
+        `conic-gradient(#10B981 0% ${stop1}%, #38BDF8 ${stop1}% ${stop2}%, #F59E0B ${stop2}% 100%)`;
+
+      const openHelp = (db.helpRequests || []).filter(r => r.status === 'open').length;
+      const helpedOrResolved = (db.helpRequests || []).filter(r => r.status === 'helped' || r.status === 'resolved').length;
+      document.getElementById('ach-submitted-num').textContent = submittedEntries;
+      document.getElementById('cd-help-open').textContent = openHelp;
+      document.getElementById('cd-help-resolved').textContent = helpedOrResolved;
+
+      document.getElementById('cd-upcoming-tasks').innerHTML = activeTasks.map(t => {
+        const sub = subMap[String(t.subject_id)];
+        const cnt = activeStudents.filter(s => {
+          const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(s.student_id) && String(st.task_id) === String(t.task_id));
+          return rec && rec.status === 'submitted';
+        }).length;
+        const pct = totalStudents > 0 ? Math.round((cnt / totalStudents) * 100) : 0;
+        return `
+          <div class="upcoming-item">
+            <div class="task-top-row">
+              <span class="subject-tag" style="background:${escapeHtml(sub.color_hex)}">${escapeHtml(sub.subject_name)}</span>
+              <span class="due-badge">⏰ ${escapeHtml(formatThaiDateTime(t.due_date))}</span>
+            </div>
+            <div style="font-weight:700; margin:6px 0;">${escapeHtml(t.title)}</div>
+            <div class="prog-label-row">
+              <span>✅ ${cnt}/${totalStudents} คน</span>
+              <span>${pct}%</span>
+            </div>
+            <div class="prog-track"><div class="prog-fill fill-green" style="width:${pct}%"></div></div>
+          </div>
+        `;
+      }).join('');
+
+      const rosters = getActiveDutyRosters();
+      document.getElementById('cd-duty-roster').innerHTML = rosters.map(d => `
+        <div class="demo-chips">
+          ${d.members.map(m => `<span class="badge-pill badge-mint">🌟 ${escapeHtml(m.nickname)}</span>`).join('')}
+        </div>
+      `).join('');
+    }
+
+    // ==================== SECTION 3: HELP CENTER ====================
+    function setHelpCenterFilter(f) {
+      helpCenterFilter = f;
+      document.getElementById('hc-tab-active').className = f === 'active' ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm';
+      document.getElementById('hc-tab-resolved').className = f === 'resolved' ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm';
+      renderHelpCenter();
+    }
+
+    function renderHelpCenter() {
+      const allReqs = db.helpRequests || [];
+      document.getElementById('hc-count-active').textContent = allReqs.filter(r => r.status !== 'resolved').length;
+      document.getElementById('hc-count-resolved').textContent = allReqs.filter(r => r.status === 'resolved').length;
+
+      const filtered = allReqs.filter(r => helpCenterFilter === 'active' ? r.status !== 'resolved' : r.status === 'resolved');
+      const container = document.getElementById('help-center-list');
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="card" style="grid-column:1/-1; text-align:center; padding:32px; color:var(--text-muted);">🎉 ไม่มีคำขอความช่วยเหลือในขณะนี้</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(r => {
+        const task = (db.tasks || []).find(t => String(t.task_id) === String(r.task_id)) || { title: 'งาน', due_date: '', subject_id: '1' };
+        const sub = (db.subjects || []).find(s => String(s.subject_id) === String(task.subject_id)) || { subject_name: 'ทั่วไป', color_hex: '#0284C7' };
+        const resps = (db.helpResponses || []).filter(x => String(x.request_id) === String(r.request_id));
+        const isMine = currentUser?.role === 'student' && String(r.student_id) === String(currentUser.student_id);
+
+        return `
+          <div class="help-card ${escapeHtml(r.status)}">
+            <div>
+              <div class="task-top-row">
+                <span class="subject-tag" style="background:${escapeHtml(sub.color_hex)}">📘 ${escapeHtml(sub.subject_name)}</span>
+                <span class="status-pill ${r.status === 'helped' ? 'submitted' : 'need_help'}">
+                  ${r.status === 'helped' ? `💝 มีเพื่อนอาสาแล้ว (${resps.length})` : '🔔 รอเพื่อนช่วย'}
+                </span>
+              </div>
+              <h4 class="task-title">${escapeHtml(task.title)}</h4>
+
+              <div class="symbol-meta-row mb-16">
+                <span class="sym-chip">🙋 ${escapeHtml(r.display_name)}</span>
+                <span class="sym-chip warn">❓ ${escapeHtml(r.reason_category)}</span>
+                <span class="sym-chip">⏰ ${escapeHtml(formatThaiDateTime(task.due_date))}</span>
+              </div>
+
+              ${r.details ? `<div class="speech-bubble">💬 “${escapeHtml(r.details)}”</div>` : ''}
+            </div>
+
+            ${resps.length > 0 ? `
+              <div class="helper-responses-box">
+                ${resps.map(rs => `
+                  <div style="margin-bottom:4px;">
+                    <strong>💝 ${escapeHtml(rs.helper_name)}</strong> (${escapeHtml(rs.help_method)}): “${escapeHtml(rs.message)}”
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <div class="btn-row">
+              ${r.status !== 'resolved' && !isMine ? `
+                <button type="button" class="btn btn-mint btn-block" onclick="openVolunteerModal('${escapeHtml(r.request_id)}')">
+                  💝 ฉันช่วยได้
+                </button>
+              ` : ''}
+              ${r.status !== 'resolved' && (isMine || currentUser?.role === 'teacher') ? `
+                <button type="button" class="btn btn-outline btn-block" onclick="resolveHelpRequest('${escapeHtml(r.request_id)}')">
+                  ✔️ เข้าใจแล้ว / ปิดคำขอ
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openVolunteerModal(reqId) {
+      const r = (db.helpRequests || []).find(x => String(x.request_id) === String(reqId));
+      if (!r) return;
+      document.getElementById('vol-request-id').value = r.request_id;
+      document.getElementById('vol-request-summary').textContent = `🙋 ช่วย ${r.display_name} • ${r.reason_category}`;
+      document.getElementById('vol-message').value = '';
+      openModal('modal-volunteer');
+    }
+
+    function submitVolunteerForm(e) {
+      e.preventDefault();
+      const reqId = document.getElementById('vol-request-id').value;
+      const help_method = document.getElementById('vol-help-method').value;
+      const message = document.getElementById('vol-message').value.trim();
+
+      const r = (db.helpRequests || []).find(x => String(x.request_id) === String(reqId));
+      if (!r) return;
+
+      const helperName = currentUser.role === 'student' ? currentUser.nickname : 'ครูที่ปรึกษา';
+      db.helpResponses.push({
+        response_id: String((db.helpResponses.length || 0) + 1),
+        request_id: String(reqId), helper_student_id: String(currentUser.id),
+        helper_name: helperName, help_method, message, created_at: new Date().toISOString()
+      });
+
+      if (r.status === 'open') r.status = 'helped';
+      saveDbAndSync();
+      closeModal('modal-volunteer');
+      renderHelpCenter();
+      updateHelpCenterBadge();
+      showToast('💝 ขอบคุณที่ช่วยเพื่อนนะ!', 'success');
+    }
+
+    function resolveHelpRequest(reqId) {
+      const r = (db.helpRequests || []).find(x => String(x.request_id) === String(reqId));
+      if (!r) return;
+      r.status = 'resolved';
+      r.resolved_at = new Date().toISOString();
+      saveDbAndSync();
+      renderHelpCenter();
+      updateHelpCenterBadge();
+      showToast('✔️ ปิดคำขอเรียบร้อยแล้ว', 'success');
+    }
+
+    // ==================== SECTION 4: STUDENT TASK MANAGERS ====================
+    function initDutyManager() {
+      resetTaskForm();
+      renderDutyTasksList();
+    }
+
+    function resetTaskForm() {
+      const today = getBangkokDateString(0);
+      document.getElementById('task-edit-id').value = '';
+      document.getElementById('duty-form-heading').textContent = '➕ จดงานใหม่ให้ห้องเรียน';
+      document.getElementById('btn-reset-duty-form').classList.add('hidden');
+      document.getElementById('task-due-reason-group').classList.add('hidden');
+      document.getElementById('task-title').value = '';
+      document.getElementById('task-description').value = '';
+      document.getElementById('task-assigned-date').value = today;
+      document.getElementById('task-due-date').value = `${today}T16:00`;
+      document.getElementById('task-attachment-url').value = '';
+      document.getElementById('task-target-group').value = 'ทุกคน';
+      document.getElementById('task-due-change-reason').value = '';
+      document.getElementById('task-recorder-name').value = currentUser?.role === 'teacher'
+        ? 'ครูที่ปรึกษา'
+        : `${currentUser?.nickname || ''} (เวร)`;
+      updateSelectedSubjectTeacherHint();
+    }
+
+    function renderDutyTasksList() {
+      const container = document.getElementById('duty-tasks-list');
+      if (!container) return;
+      container.innerHTML = (db.tasks || []).map(t => {
+        const sub = (db.subjects || []).find(s => String(s.subject_id) === String(t.subject_id)) || { subject_name: 'วิชา', color_hex: '#0284C7', teacher_name: '' };
+        const isCancelled = t.status === 'cancelled';
+        return `
+          <div class="manage-task-item" style="${isCancelled ? 'opacity:0.6; background:#FEF2F2;' : ''}">
+            <div class="task-top-row">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span class="subject-tag" style="background:${escapeHtml(sub.color_hex)}">${escapeHtml(sub.subject_name)}</span>
+                ${sub.teacher_name ? `<span class="sym-chip">👩‍🏫 ${escapeHtml(sub.teacher_name)}</span>` : ''}
+              </div>
+              <span class="sym-chip">⏰ ${escapeHtml(formatThaiDateTime(t.due_date))}</span>
+            </div>
+            <div style="font-weight:700; margin:4px 0;">${escapeHtml(t.title)}</div>
+            <div class="text-muted text-sm">✍️ ${escapeHtml(t.created_by_name)}</div>
+            ${isCancelled ? `<div style="color:#B91C1C; font-size:0.78rem;">🚫 ยกเลิก: ${escapeHtml(t.cancel_reason)}</div>` : `
+              <div class="btn-row mt-8">
+                <button type="button" class="btn btn-outline btn-sm" onclick="populateEditTaskForm('${escapeHtml(t.task_id)}')">✏️ แก้ไข</button>
+                <button type="button" class="btn btn-danger-soft btn-sm" onclick="promptCancelTask('${escapeHtml(t.task_id)}')">🚫 ยกเลิกงาน</button>
+              </div>
+            `}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function populateEditTaskForm(taskId) {
+      const t = (db.tasks || []).find(x => String(x.task_id) === String(taskId));
+      if (!t) return;
+      document.getElementById('task-edit-id').value = t.task_id;
+      document.getElementById('duty-form-heading').textContent = `✏️ แก้ไขงาน #${t.task_id}`;
+      document.getElementById('btn-reset-duty-form').classList.remove('hidden');
+      document.getElementById('task-due-reason-group').classList.remove('hidden');
+      document.getElementById('task-subject-id').value = t.subject_id;
+      updateSelectedSubjectTeacherHint();
+      document.getElementById('task-title').value = t.title;
+      document.getElementById('task-description').value = t.description;
+      document.getElementById('task-assigned-date').value = t.assigned_date;
+      document.getElementById('task-due-date').value = String(t.due_date).slice(0, 16);
+      document.getElementById('task-attachment-url').value = t.attachment_url || '';
+      document.getElementById('task-target-group').value = t.target_group || 'ทุกคน';
+    }
+
+    function handlePreviewTaskBeforeSave(e) {
+      e.preventDefault();
+      const editId = document.getElementById('task-edit-id').value;
+      const subject_id = document.getElementById('task-subject-id').value;
+      const title = document.getElementById('task-title').value.trim();
+      const description = document.getElementById('task-description').value.trim();
+      const assigned_date = document.getElementById('task-assigned-date').value;
+      const due_date = document.getElementById('task-due-date').value;
+      const attachment_url = document.getElementById('task-attachment-url').value.trim();
+      const target_group = document.getElementById('task-target-group').value.trim() || 'ทุกคน';
+      const due_change_reason = document.getElementById('task-due-change-reason').value.trim();
+      const recorder = document.getElementById('task-recorder-name').value;
+
+      const subObj = (db.subjects || []).find(s => String(s.subject_id) === String(subject_id));
+      const dups = (db.tasks || []).filter(t => t.status !== 'cancelled' && String(t.task_id) !== String(editId) && t.title.toLowerCase() === title.toLowerCase());
+
+      pendingTaskPreview = { editId, subject_id, title, description, assigned_date, due_date, attachment_url, target_group, due_change_reason, recorder };
+
+      const warnBox = document.getElementById('task-preview-dup-warning');
+      warnBox.classList.toggle('hidden', dups.length === 0);
+      if (dups.length > 0) warnBox.innerHTML = `⚠️ มีงานชื่อ "${escapeHtml(title)}" อยู่แล้ว กรุณาตรวจสอบก่อนบันทึก`;
+
+      document.getElementById('task-preview-content').innerHTML = `
+        <div>📘 <strong>วิชา:</strong> ${escapeHtml(subObj ? subObj.subject_name : '-')}${subObj?.teacher_name ? ` (👩‍🏫 ${escapeHtml(subObj.teacher_name)})` : ''}</div>
+        <div>📌 <strong>ชื่องาน:</strong> ${escapeHtml(title)}</div>
+        <div>📝 <strong>รายละเอียด:</strong> ${escapeHtml(description)}</div>
+        <div>⏰ <strong>กำหนดส่ง:</strong> ${escapeHtml(due_date.replace('T', ' '))}</div>
+        <div>✍️ <strong>ผู้บันทึก:</strong> ${escapeHtml(recorder)}</div>
+      `;
+      openModal('modal-task-preview');
+    }
+
+    function confirmSaveTaskFromPreview() {
+      if (!pendingTaskPreview) return;
+      const p = pendingTaskPreview;
+      const now = new Date().toISOString();
+
+      if (p.editId) {
+        const t = db.tasks.find(x => String(x.task_id) === String(p.editId));
+        if (t) {
+          let hist = [];
+          try { hist = JSON.parse(t.due_date_history || '[]'); } catch {}
+          if (t.due_date !== p.due_date) {
+            hist.push({ old_due_date: t.due_date, new_due_date: p.due_date, changed_by: p.recorder, reason: p.due_change_reason || 'เลื่อนกำหนดส่ง' });
+          }
+          Object.assign(t, {
+            subject_id: p.subject_id, title: p.title, description: p.description,
+            assigned_date: p.assigned_date, due_date: p.due_date,
+            attachment_url: p.attachment_url, target_group: p.target_group,
+            due_date_history: JSON.stringify(hist), updated_at: now
+          });
+        }
+        showToast('บันทึกการแก้ไขแล้ว', 'success');
+      } else {
+        const nextId = String(Math.max(0, ...db.tasks.map(x => Number(x.task_id) || 0)) + 1);
+        db.tasks.push({
+          task_id: nextId, subject_id: p.subject_id, title: p.title, description: p.description,
+          assigned_date: p.assigned_date, due_date: p.due_date, attachment_url: p.attachment_url,
+          target_group: p.target_group, status: 'active', cancel_reason: '',
+          created_by_type: currentUser.role === 'teacher' ? 'teacher' : 'student_duty',
+          created_by_id: String(currentUser.id), created_by_name: p.recorder,
+          due_date_history: '[]', created_at: now, updated_at: now
+        });
+        showToast('🎉 เพิ่มงานใหม่เรียบร้อยแล้ว!', 'success');
+      }
+
+      saveDbAndSync();
+      closeModal('modal-task-preview');
+      resetTaskForm();
+      renderDutyTasksList();
+    }
+
+    function promptCancelTask(taskId) {
+      const reason = window.prompt('ระบุเหตุผลที่ยกเลิกงานนี้:');
+      if (!reason || !reason.trim()) return;
+      const t = db.tasks.find(x => String(x.task_id) === String(taskId));
+      if (!t) return;
+      t.status = 'cancelled';
+      t.cancel_reason = `${reason.trim()} (${currentUser.nickname || currentUser.full_name})`;
+      saveDbAndSync();
+      renderDutyTasksList();
+      showToast('ยกเลิกงานเรียบร้อยแล้ว', 'success');
+    }
+
+    // ==================== SECTION 5: TEACHER DASHBOARD ====================
+    function switchTeacherTab(tabName) {
+      ['tracking', 'duty', 'tasks', 'students', 'reports'].forEach(t => {
+        document.getElementById(`ttab-${t}`)?.classList.toggle('hidden', t !== tabName);
+        document.getElementById(`ttab-btn-${t}`)?.classList.toggle('active', t === tabName);
+      });
+    }
+
+    function renderTeacherDashboard() {
+      if (!currentUser || currentUser.role !== 'teacher') return;
+      const activeTasks = (db.tasks || []).filter(t => t.status !== 'cancelled');
+      const sel = document.getElementById('teacher-track-task-select');
+      if (sel) {
+        const cur = sel.value;
+        sel.innerHTML = activeTasks.map(t => `<option value="${t.task_id}">${escapeHtml(t.title)}</option>`).join('');
+        if (cur && activeTasks.some(t => String(t.task_id) === String(cur))) sel.value = cur;
+      }
+      renderTeacherTaskTracking();
+      renderTeacherDutyTab();
+      renderTeacherSubjectsAndTasks();
+      renderTeacherStudentsTab();
+      renderTeacherReportsTab();
+    }
+
+    function renderTeacherTaskTracking() {
+      const taskId = document.getElementById('teacher-track-task-select')?.value;
+      const task = (db.tasks || []).find(t => String(t.task_id) === String(taskId)) || db.tasks[0];
+      const container = document.getElementById('teacher-tracking-detail');
+      if (!container || !task) return;
+
+      const submitted = [], inProgress = [], needHelp = [], pending = [];
+      (db.students || []).filter(s => String(s.is_active) === '1').forEach(s => {
+        const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(s.student_id) && String(st.task_id) === String(task.task_id));
+        const st = rec ? rec.status : 'pending';
+        if (st === 'submitted') submitted.push(s);
+        else if (st === 'in_progress') inProgress.push(s);
+        else if (st === 'need_help') needHelp.push(s);
+        else pending.push(s);
+      });
+
+      const colHtml = (title, cls, arr) => `
+        <div class="card" style="padding:12px;">
+          <div class="card-header-flex"><strong>${title}</strong><span class="status-pill ${cls}">${arr.length}</span></div>
+          <div class="history-list" style="max-height:220px;">
+            ${arr.map(s => `<div class="history-item"><strong>${escapeHtml(s.nickname)}</strong> (${escapeHtml(s.student_id)})</div>`).join('') || '<span class="text-muted text-sm">-</span>'}
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = `<div class="summary-grid-4">
+        ${colHtml('✅ ส่งแล้ว', 'submitted', submitted)}
+        ${colHtml('⏳ กำลังทำ', 'in_progress', inProgress)}
+        ${colHtml('🙋 ขอช่วย', 'need_help', needHelp)}
+        ${colHtml('⚪ ยังไม่ทำ', 'pending', pending)}
+      </div>`;
+    }
+
+    function renderTeacherDutyTab() {
+      const today = getBangkokDateString(0);
+      if (!document.getElementById('duty-start-date').value) document.getElementById('duty-start-date').value = today;
+      if (!document.getElementById('duty-end-date').value) document.getElementById('duty-end-date').value = getBangkokDateString(6);
+
+      const dutyCountMap = {};
+      (db.weeklyDuties || []).forEach(d => {
+        let ids = [];
+        try { ids = JSON.parse(d.student_ids_json || '[]'); } catch {}
+        ids.forEach(id => { dutyCountMap[id] = (dutyCountMap[id] || 0) + 1; });
+      });
+
+      const students = (db.students || []).filter(s => String(s.is_active) === '1');
+      document.getElementById('duty-student-checkboxes').innerHTML = students.map(s => `
+        <label class="checkbox-card">
+          <input type="checkbox" name="duty-stu-cb" value="${escapeHtml(s.student_id)}" onchange="updateDutyCountLabel()" />
+          <span><strong>${escapeHtml(s.nickname)}</strong> (${escapeHtml(s.student_id)}) • <small class="text-muted">${dutyCountMap[s.student_id] || 0} ครั้ง</small></span>
+        </label>
+      `).join('');
+      updateDutyCountLabel();
+
+      const unassigned = students.filter(s => !dutyCountMap[s.student_id]);
+      document.getElementById('duty-unassigned-list').innerHTML = unassigned.length === 0
+        ? `<span class="badge-pill badge-mint">🎉 ทุกคนเคยเป็นเวรครบแล้ว!</span>`
+        : unassigned.map(s => `<span class="badge-pill badge-blue">${escapeHtml(s.nickname)} (${escapeHtml(s.student_id)})</span>`).join('');
+
+      document.getElementById('duty-schedules-list').innerHTML = (db.weeklyDuties || []).slice().reverse().map(d => {
+        let ids = [];
+        try { ids = JSON.parse(d.student_ids_json || '[]'); } catch {}
+        return `<div class="manage-task-item">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span><strong>${escapeHtml(d.week_label)}</strong> (${escapeHtml(d.start_date)} ถึง ${escapeHtml(d.end_date)})</span>
+            <button type="button" class="btn btn-danger-soft btn-sm" onclick="deleteWeeklyDutyByTeacher('${escapeHtml(d.duty_id)}')" title="ลบรอบเวรนี้">🗑️</button>
+          </div>
+          <div class="demo-chips mt-8">${ids.map(id => `<span class="badge-pill badge-mint">${escapeHtml(id)}</span>`).join('')}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function deleteWeeklyDutyByTeacher(dutyId) {
+      db.weeklyDuties = (db.weeklyDuties || []).filter(d => String(d.duty_id) !== String(dutyId));
+      saveDbAndSync();
+      renderDemoChips();
+      renderTeacherDutyTab();
+      showToast('🗑️ ลบรอบเวรเรียบร้อยแล้ว', 'success');
+    }
+
+    function updateDutyCountLabel() {
+      const cnt = document.querySelectorAll('input[name="duty-stu-cb"]:checked').length;
+      document.getElementById('duty-selected-count').textContent = `เลือกแล้ว ${cnt} คน`;
+    }
+
+    function autoSelectUnassignedDutyStudents() {
+      const dutyCountMap = {};
+      (db.weeklyDuties || []).forEach(d => {
+        let ids = [];
+        try { ids = JSON.parse(d.student_ids_json || '[]'); } catch {}
+        ids.forEach(id => { dutyCountMap[id] = (dutyCountMap[id] || 0) + 1; });
+      });
+      const sorted = (db.students || []).filter(s => String(s.is_active) === '1')
+        .sort((a, b) => (dutyCountMap[a.student_id] || 0) - (dutyCountMap[b.student_id] || 0));
+      const picked = new Set(sorted.slice(0, 5).map(s => s.student_id));
+      document.querySelectorAll('input[name="duty-stu-cb"]').forEach(cb => { cb.checked = picked.has(cb.value); });
+      updateDutyCountLabel();
+      showToast('เลือก 5 คนที่ยังไม่เคยเป็นเวรให้อัตโนมัติแล้ว!', 'info');
+    }
+
+    function handleCreateWeeklyDuty(e) {
+      e.preventDefault();
+      const week_label = document.getElementById('duty-week-label').value.trim();
+      const start_date = document.getElementById('duty-start-date').value;
+      const end_date = document.getElementById('duty-end-date').value;
+      const ids = Array.from(document.querySelectorAll('input[name="duty-stu-cb"]:checked')).map(cb => cb.value);
+      if (ids.length === 0) return showToast('กรุณาเลือกนักเรียนอย่างน้อย 1 คน', 'error');
+
+      db.weeklyDuties.push({
+        duty_id: String((db.weeklyDuties.length || 0) + 1),
+        week_label, start_date, end_date, note: '',
+        student_ids_json: JSON.stringify(ids), is_active: '1',
+        created_by: currentUser.full_name, created_at: new Date().toISOString()
+      });
+      saveDbAndSync();
+      document.getElementById('duty-week-label').value = '';
+      renderTeacherDutyTab();
+      showToast('บันทึกตารางเวรแล้ว', 'success');
+    }
+
+    function renderTeacherSubjectsAndTasks() {
+      document.getElementById('teacher-subjects-list').innerHTML = (db.subjects || []).map(s => `
+        <div class="manage-task-item" style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <span>
+            <span class="subject-tag" style="background:${escapeHtml(s.color_hex)}">${escapeHtml(s.subject_code)}</span>
+            <strong style="margin-left:4px;">${escapeHtml(s.subject_name)}</strong>
+            ${s.teacher_name ? `<small class="text-muted" style="margin-left:6px;">(👩‍🏫 ${escapeHtml(s.teacher_name)})</small>` : ''}
+          </span>
+          <div class="btn-row">
+            <button type="button" class="btn btn-outline btn-sm" onclick="toggleSubjectActive('${escapeHtml(s.subject_id)}')">
+              ${String(s.is_active) === '1' ? 'ซ่อน' : 'แสดง'}
+            </button>
+            <button type="button" class="btn btn-danger-soft btn-sm" onclick="deleteSubjectByTeacher('${escapeHtml(s.subject_id)}')" title="ลบรายวิชา">🗑️</button>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('teacher-all-tasks-list').innerHTML = (db.tasks || []).map(t => `
+        <div class="manage-task-item" style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <div>
+            <strong>${escapeHtml(t.title)}</strong>
+            <div class="text-muted text-sm">⏰ ${escapeHtml(formatThaiDateTime(t.due_date))} • ✍️ ${escapeHtml(t.created_by_name)}</div>
+          </div>
+          <button type="button" class="btn btn-danger-soft btn-sm" onclick="deleteTaskByTeacher('${escapeHtml(t.task_id)}')">🗑️</button>
+        </div>
+      `).join('');
+    }
+
+    function deleteSubjectByTeacher(subId) {
+      db.subjects = (db.subjects || []).filter(s => String(s.subject_id) !== String(subId));
+      saveDbAndSync();
+      populateSubjectControls();
+      renderTeacherSubjectsAndTasks();
+      showToast('🗑️ ลบรายวิชาเรียบร้อยแล้ว', 'success');
+    }
+
+    function handleSaveSubject(e) {
+      e.preventDefault();
+      const nextId = String((db.subjects.length || 0) + 1);
+      db.subjects.push({
+        subject_id: nextId,
+        subject_code: document.getElementById('sub-code').value.trim(),
+        subject_name: document.getElementById('sub-name').value.trim(),
+        teacher_name: document.getElementById('sub-teacher').value.trim(),
+        color_hex: document.getElementById('sub-color').value,
+        is_active: '1'
+      });
+      saveDbAndSync();
+      populateSubjectControls();
+      renderTeacherSubjectsAndTasks();
+      showToast('เพิ่มรายวิชาแล้ว', 'success');
+    }
+
+    function toggleSubjectActive(subId) {
+      const s = db.subjects.find(x => String(x.subject_id) === String(subId));
+      if (!s) return;
+      s.is_active = String(s.is_active) === '1' ? '0' : '1';
+      saveDbAndSync();
+      populateSubjectControls();
+      renderTeacherSubjectsAndTasks();
+    }
+
+    function deleteTaskByTeacher(taskId) {
+      db.tasks = (db.tasks || []).filter(t => String(t.task_id) !== String(taskId));
+      db.studentTasks = (db.studentTasks || []).filter(st => String(st.task_id) !== String(taskId));
+      db.helpRequests = (db.helpRequests || []).filter(hr => String(hr.task_id) !== String(taskId));
+      saveDbAndSync();
+      renderTeacherDashboard();
+      showToast('🗑️ ลบงานเรียบร้อยแล้ว', 'success');
+    }
+
+    let clearAllStudentsConfirmState = false;
+
+    function renderTeacherStudentsTab() {
+      const list = db.students || [];
+      const countEl = document.getElementById('stu-total-count');
+      if (countEl) countEl.textContent = list.length;
+
+      const clearBtn = document.getElementById('btn-clear-all-students');
+      if (clearBtn) {
+        clearBtn.textContent = clearAllStudentsConfirmState
+          ? '⚠️ คลิกอีกครั้งเพื่อยืนยันลบทั้งหมด'
+          : '🗑️ ล้างรายชื่อทั้งหมด';
+        clearBtn.classList.toggle('hidden', list.length === 0);
+      }
+
+      if (list.length === 0) {
+        document.getElementById('teacher-students-table-wrap').innerHTML = `
+          <div style="text-align:center; padding:28px; color:var(--text-muted);">
+            ยังไม่มีรายชื่อนักเรียนในระบบ (สามารถกรอกเพิ่มทางซ้ายมือ หรือนำเข้าจากไฟล์ CSV ได้เลย)
+          </div>
+        `;
+        return;
+      }
+
+      document.getElementById('teacher-students-table-wrap').innerHTML = `
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>รหัส</th>
+              <th>ชื่อ-นามสกุล</th>
+              <th>ชื่อเล่น</th>
+              <th>ชั้น/ห้อง</th>
+              <th>PIN</th>
+              <th style="text-align:right;">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${list.map(s => `
+              <tr>
+                <td><strong>${escapeHtml(s.student_id)}</strong></td>
+                <td>${escapeHtml(s.full_name)}</td>
+                <td>${escapeHtml(s.nickname)}</td>
+                <td>${escapeHtml(s.grade_level)}/${escapeHtml(s.classroom)}</td>
+                <td><code>${escapeHtml(s.pin)}</code></td>
+                <td style="text-align:right; white-space:nowrap;">
+                  <button type="button" class="btn btn-outline btn-sm" onclick="editStudentByTeacher('${escapeHtml(s.student_id)}')" title="แก้ไขข้อมูลนักเรียน">
+                    ✏️ แก้ไข
+                  </button>
+                  <button type="button" class="btn btn-danger-soft btn-sm" onclick="deleteStudentByTeacher('${escapeHtml(s.student_id)}')" title="ลบรายชื่อนักเรียน">
+                    🗑️ ลบ
+                  </button>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function editStudentByTeacher(studentId) {
+      const s = (db.students || []).find(x => String(x.student_id) === String(studentId));
+      if (!s) return;
+      document.getElementById('stu-id').value = s.student_id;
+      document.getElementById('stu-fullname').value = s.full_name;
+      document.getElementById('stu-nick').value = s.nickname;
+      document.getElementById('stu-grade').value = s.grade_level || 'ม.4';
+      document.getElementById('stu-room').value = s.classroom || '6';
+      document.getElementById('stu-pin').value = s.pin || '1234';
+      document.getElementById('stu-fullname').focus();
+      showToast(`โหลดข้อมูลของ ${s.nickname} (${s.student_id}) ลงในฟอร์มแล้ว แก้ไขแล้วกดบันทึกได้เลย`, 'info');
+    }
+
+    function deleteStudentByTeacher(studentId) {
+      const sid = String(studentId);
+      const target = (db.students || []).find(s => String(s.student_id) === sid);
+      const label = target ? `${target.nickname} (${sid})` : sid;
+
+      db.students = (db.students || []).filter(s => String(s.student_id) !== sid);
+      db.studentTasks = (db.studentTasks || []).filter(st => String(st.student_id) !== sid);
+      db.helpRequests = (db.helpRequests || []).filter(hr => String(hr.student_id) !== sid);
+      db.helpResponses = (db.helpResponses || []).filter(resp => String(resp.helper_student_id) !== sid);
+      (db.weeklyDuties || []).forEach(d => {
+        try {
+          const ids = JSON.parse(d.student_ids_json || '[]').filter(id => String(id) !== sid);
+          d.student_ids_json = JSON.stringify(ids);
+        } catch {}
+      });
+
+      logActivity('teacher', currentUser?.id || 'teacher', currentUser?.full_name || 'ครู', 'DELETE_STUDENT', 'Student', sid, { deleted: label });
+      saveDbAndSync();
+      renderDemoChips();
+      renderTeacherDashboard();
+      showToast(`🗑️ ลบรายชื่อ ${label} เรียบร้อยแล้ว`, 'success');
+    }
+
+    function handleClearAllStudents() {
+      if (!clearAllStudentsConfirmState) {
+        clearAllStudentsConfirmState = true;
+        renderTeacherStudentsTab();
+        showToast('กดปุ่ม "⚠️ คลิกอีกครั้งเพื่อยืนยันลบทั้งหมด" อีกครั้งเพื่อลบรายชื่อทั้งหมด', 'info');
+        setTimeout(() => {
+          clearAllStudentsConfirmState = false;
+          renderTeacherStudentsTab();
+        }, 5000);
+        return;
+      }
+
+      clearAllStudentsConfirmState = false;
+      db.students = [];
+      db.studentTasks = [];
+      db.helpRequests = [];
+      db.helpResponses = [];
+      (db.weeklyDuties || []).forEach(d => { d.student_ids_json = '[]'; });
+
+      logActivity('teacher', currentUser?.id || 'teacher', currentUser?.full_name || 'ครู', 'CLEAR_ALL_STUDENTS', 'Student', 'all', {});
+      saveDbAndSync();
+      renderDemoChips();
+      renderTeacherDashboard();
+      showToast('🗑️ ล้างรายชื่อนักเรียนทั้งหมดเรียบร้อยแล้ว', 'success');
+    }
+
+    function handleSaveStudent(e) {
+      e.preventDefault();
+      const student_id = document.getElementById('stu-id').value.trim();
+      const full_name = document.getElementById('stu-fullname').value.trim();
+      const nickname = document.getElementById('stu-nick').value.trim();
+      const grade_level = document.getElementById('stu-grade').value.trim();
+      const classroom = document.getElementById('stu-room').value.trim();
+      const pin = document.getElementById('stu-pin').value.trim() || '1234';
+
+      const ex = db.students.find(s => String(s.student_id) === student_id);
+      if (ex) Object.assign(ex, { full_name, nickname, grade_level, classroom, pin, is_active: '1' });
+      else db.students.push({ student_id, full_name, nickname, grade_level, classroom, pin, show_nickname: '1', is_active: '1', updated_at: new Date().toISOString() });
+
+      document.getElementById('stu-id').value = '';
+      document.getElementById('stu-fullname').value = '';
+      document.getElementById('stu-nick').value = '';
+
+      saveDbAndSync();
+      renderDemoChips();
+      renderTeacherDashboard();
+      showToast('💾 บันทึกข้อมูลนักเรียนแล้ว', 'success');
+    }
+
+    function handleCsvFileSelect(e) {
+      const f = e.target.files?.[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = () => { document.getElementById('csv-text-area').value = String(reader.result || ''); };
+      reader.readAsText(f, 'utf-8');
+    }
+
+    function handleImportStudentCsv() {
+      const raw = document.getElementById('csv-text-area').value.trim();
+      if (!raw) return;
+      const lines = raw.replace(/^\uFEFF/, '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      let count = 0;
+      lines.forEach((line, idx) => {
+        const cols = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+        if (cols.length < 2) return;
+        if (idx === 0 && (cols[0].includes('รหัส') || cols[0].toLowerCase().includes('student'))) return;
+        const [student_id, full_name, nickname = full_name, grade_level = 'ม.4', classroom = '6', pin = '1234'] = cols;
+        const ex = db.students.find(s => String(s.student_id) === student_id);
+        if (ex) { ex.full_name = full_name; ex.nickname = nickname; }
+        else db.students.push({ student_id, full_name, nickname, grade_level, classroom, pin, show_nickname: '1', is_active: '1', updated_at: new Date().toISOString() });
+        count++;
+      });
+      saveDbAndSync();
+      renderTeacherStudentsTab();
+      showToast(`นำเข้าสำเร็จ ${count} คน!`, 'success');
+    }
+
+    function downloadSampleStudentCsv() {
+      const csv = '\uFEFFรหัสนักเรียน,ชื่อ-นามสกุล,ชื่อเล่น,ชั้น,ห้อง,PIN\r\n6740613,นายธนดล คนขยัน,ต้นกล้า,ม.4,6,1234\r\n';
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'sample-students.csv';
+      a.click();
+    }
+
+    function renderTeacherReportsTab() {
+      const activeTasks = (db.tasks || []).filter(t => t.status !== 'cancelled');
+      const students = (db.students || []).filter(s => String(s.is_active) === '1');
+
+      document.getElementById('teacher-student-report-wrap').innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>รหัส</th><th>ชื่อ-นามสกุล</th><th>ชื่อเล่น</th><th>✅ ส่งแล้ว</th><th>⏳ กำลังทำ</th><th>🙋 ขอช่วย</th><th>อัตราสำเร็จ</th></tr></thead>
+          <tbody>
+            ${students.map(s => {
+              let sub = 0, prog = 0, help = 0;
+              activeTasks.forEach(t => {
+                const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(s.student_id) && String(st.task_id) === String(t.task_id));
+                const st = rec ? rec.status : 'pending';
+                if (st === 'submitted') sub++;
+                else if (st === 'in_progress') prog++;
+                else if (st === 'need_help') help++;
+              });
+              const pct = activeTasks.length > 0 ? Math.round((sub / activeTasks.length) * 100) : 0;
+              return `<tr>
+                <td><strong>${escapeHtml(s.student_id)}</strong></td>
+                <td>${escapeHtml(s.full_name)}</td>
+                <td>${escapeHtml(s.nickname)}</td>
+                <td style="color:#059669; font-weight:700;">${sub}/${activeTasks.length}</td>
+                <td>${prog}</td>
+                <td style="color:#D97706;">${help}</td>
+                <td><strong>${pct}%</strong></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      document.getElementById('teacher-subject-report-wrap').innerHTML = `
+        <table class="data-table">
+          <thead><tr><th>วิชา</th><th>จำนวนงาน</th><th>ส่งแล้ว</th><th>อัตราการส่ง</th></tr></thead>
+          <tbody>
+            ${(db.subjects || []).map(sub => {
+              const subTasks = activeTasks.filter(t => String(t.subject_id) === String(sub.subject_id));
+              const expected = subTasks.length * students.length;
+              let subCnt = 0;
+              subTasks.forEach(t => {
+                students.forEach(s => {
+                  const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(s.student_id) && String(st.task_id) === String(t.task_id));
+                  if (rec?.status === 'submitted') subCnt++;
+                });
+              });
+              const pct = expected > 0 ? Math.round((subCnt / expected) * 100) : 0;
+              return `<tr><td><strong>${escapeHtml(sub.subject_name)}</strong></td><td>${subTasks.length}</td><td>${subCnt}/${expected}</td><td><strong>${pct}%</strong></td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function exportStudentSummaryCsv() {
+      const activeTasks = (db.tasks || []).filter(t => t.status !== 'cancelled');
+      const rows = ['รหัสนักเรียน,ชื่อ-นามสกุล,ชื่อเล่น,งานทั้งหมด,ส่งแล้ว,กำลังทำ,ขอความช่วยเหลือ,อัตราการส่ง (%)'];
+      (db.students || []).forEach(s => {
+        let sub = 0, prog = 0, help = 0;
+        activeTasks.forEach(t => {
+          const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(s.student_id) && String(st.task_id) === String(t.task_id));
+          if (rec?.status === 'submitted') sub++;
+          else if (rec?.status === 'in_progress') prog++;
+          else if (rec?.status === 'need_help') help++;
+        });
+        const pct = activeTasks.length > 0 ? Math.round((sub / activeTasks.length) * 100) : 0;
+        rows.push(`"${s.student_id}","${s.full_name}","${s.nickname}",${activeTasks.length},${sub},${prog},${help},${pct}%`);
+      });
+      const blob = new Blob(['\uFEFF' + rows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'class-together-summary.csv';
+      a.click();
+    }
+
+    function exportDetailedTasksCsv() {
+      const rows = ['รหัสนักเรียน,ชื่อ-นามสกุล,ชื่องาน,สถานะ,เวลาที่กดส่ง'];
+      (db.tasks || []).filter(t => t.status !== 'cancelled').forEach(t => {
+        (db.students || []).forEach(s => {
+          const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(s.student_id) && String(st.task_id) === String(t.task_id));
+          rows.push(`"${s.student_id}","${s.full_name}","${t.title}","${rec ? rec.status : 'pending'}","${rec?.submitted_at || '-'}"`);
+        });
+      });
+      const blob = new Blob(['\uFEFF' + rows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'class-together-details.csv';
+      a.click();
+    }
+
+    function openChangePinModal() {
+      document.getElementById('cp-current-pin').value = '';
+      document.getElementById('cp-new-pin').value = '';
+      document.getElementById('cp-show-nickname').checked = Boolean(currentUser?.show_nickname);
+      openModal('modal-change-pin');
+    }
+
+    function submitChangePin(e) {
+      e.preventDefault();
+      const cur = document.getElementById('cp-current-pin').value.trim();
+      const nw = document.getElementById('cp-new-pin').value.trim();
+      const showNick = document.getElementById('cp-show-nickname').checked;
+      const stu = db.students.find(s => String(s.student_id) === String(currentUser.student_id));
+      if (!stu || String(stu.pin) !== cur) return showToast('PIN ปัจจุบันไม่ถูกต้อง', 'error');
+      stu.pin = nw;
+      stu.show_nickname = showNick ? '1' : '0';
+      currentUser.show_nickname = showNick;
+      saveDbAndSync();
+      closeModal('modal-change-pin');
+      showToast('🔑 เปลี่ยนรหัส PIN เรียบร้อยแล้ว', 'success');
+    }
+  </script>
+</body>
+</html>
