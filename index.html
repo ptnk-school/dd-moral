@@ -1816,15 +1816,35 @@
     }
 
     // ==================== GOOGLE SHEETS SYNC ====================
+    function normalizeLoadedState(remoteState) {
+      if (!remoteState) return;
+      if (Array.isArray(remoteState.students)) {
+        remoteState.students = remoteState.students.map(s => ({
+          ...s,
+          student_id: String(s.student_id || '').trim(),
+          full_name: String(s.full_name || '').trim(),
+          nickname: String(s.nickname || s.full_name || '').trim(),
+          grade_level: String(s.grade_level || 'ม.4').trim(),
+          classroom: String(s.classroom || '6').trim(),
+          pin: String(s.pin || '1234').trim() || '1234',
+          show_nickname: s.show_nickname !== undefined && s.show_nickname !== '' ? String(s.show_nickname) : '1',
+          is_active: (String(s.is_active) === '0' || String(s.is_active).toLowerCase() === 'false') ? '0' : '1'
+        })).filter(s => s.student_id !== '');
+      }
+    }
+
     async function syncFromGoogleSheet(showNotification = false) {
       if (isEmbeddedAppsScript) {
         google.script.run
           .withSuccessHandler(res => {
             if (res && res.ok && res.state && Array.isArray(res.state.students)) {
+              normalizeLoadedState(res.state);
               db = res.state;
               localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
               refreshAllViews();
               if (showNotification) showToast('ซิงค์ข้อมูลจาก Google Sheets แล้ว', 'success');
+            } else if (res && !res.ok && showNotification) {
+              showToast(`Google Sheets แจ้งเตือน: ${res.error}`, 'error');
             }
           })
           .callServerApi({ action: 'getAllState' });
@@ -1838,11 +1858,24 @@
       try {
         const res = await fetch(`${gsheetApiUrl}?action=getAllState`);
         const data = await res.json();
+        if (data && data.ok === false) {
+          console.warn('Google Sheet Script Error:', data.error);
+          if (showNotification) {
+            showToast(`Google Sheet แจ้งเตือน: ${data.error} (กรุณาอัปเดตโค้ด Code.gs เป็นเวอร์ชันใหม่)`, 'error');
+          }
+          return;
+        }
         if (data?.ok && Array.isArray(data.state?.students)) {
+          normalizeLoadedState(data.state);
+          // หากใน Google Sheet ยังว่างอยู่ (0 คน) แต่ในเครื่องครูมีรายชื่อนักเรียนอยู่แล้ว ให้ส่งรายชื่อจากเครื่องขึ้น Sheet อัตโนมัติ
+          if (data.state.students.length === 0 && Array.isArray(db.students) && db.students.length > 0) {
+            await pushLocalStateToGoogleSheet(true);
+            return;
+          }
           db = data.state;
           localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
           refreshAllViews();
-          if (showNotification) showToast('ซิงค์กับ Google Sheets สำเร็จ!', 'success');
+          if (showNotification) showToast(`ซิงค์กับ Google Sheets สำเร็จ! (นักเรียน ${db.students.length} คน)`, 'success');
         }
       } catch {
         if (showNotification) showToast('เชื่อมต่อ Google Sheets ไม่สำเร็จ กรุณาตรวจสอบ URL', 'error');
@@ -1860,11 +1893,16 @@
         return;
       }
       try {
-        await fetch(gsheetApiUrl, {
+        const res = await fetch(gsheetApiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: 'syncStateFromClient', state: db })
         });
+        const data = await res.json().catch(() => ({}));
+        if (data && data.ok === false) {
+          if (!silent) showToast(`บันทึกขึ้น Sheet ไม่สำเร็จ: ${data.error} (กรุณาอัปเดตโค้ด Code.gs)`, 'error');
+          return;
+        }
         if (!silent) showToast('อัปโหลดข้อมูลขึ้น Google Sheets สำเร็จ!', 'success');
       } catch {
         if (!silent) showToast('ไม่สามารถส่งข้อมูลไป Google Sheets ได้', 'error');
@@ -1946,19 +1984,39 @@
       showToast(`เลือกบัญชี ${idOrUser} แล้ว กดปุ่มเข้าสู่ระบบได้เลย!`, 'info');
     }
 
-    function handleStudentLogin(e) {
+    async function handleStudentLogin(e) {
       e.preventDefault();
       const sid = document.getElementById('login-student-id').value.trim();
       const pin = document.getElementById('login-student-pin').value.trim();
-      const stu = (db.students || []).find(s => String(s.student_id) === sid && String(s.is_active) === '1');
-      if (!stu || String(stu.pin) !== pin) return showToast('รหัสนักเรียนหรือ PIN ไม่ถูกต้อง', 'error');
+
+      const findStudent = () => (db.students || []).find(s =>
+        String(s.student_id || '').trim() === sid &&
+        String(s.is_active) !== '0' &&
+        String(s.is_active).toLowerCase() !== 'false'
+      );
+
+      let stu = findStudent();
+      // หากยังไม่พบในเครื่อง ให้ลองซิงค์ดึงรายชื่อล่าสุดจาก Google Sheet อัตโนมัติ 1 ครั้ง
+      if (!stu && gsheetApiUrl) {
+        await syncFromGoogleSheet(false);
+        stu = findStudent();
+      }
+
+      if (!stu) {
+        return showToast(`ไม่พบรหัสนักเรียน "${sid}" ในระบบ (ขณะนี้มีรายชื่อในระบบ ${(db.students || []).length} คน)`, 'error');
+      }
+
+      const expectedPin = String(stu.pin || '1234').trim() || '1234';
+      if (expectedPin !== pin) {
+        return showToast(`พบรหัสนักเรียน ${sid} (${stu.nickname || stu.full_name}) แต่รหัส PIN ไม่ถูกต้อง`, 'error');
+      }
 
       const onDuty = isStudentCurrentlyOnDuty(stu.student_id);
       currentUser = {
         role: 'student', id: stu.student_id, student_id: stu.student_id,
         full_name: stu.full_name, nickname: stu.nickname,
         grade_level: stu.grade_level, classroom: stu.classroom,
-        show_nickname: String(stu.show_nickname) === '1', is_on_duty: onDuty
+        show_nickname: String(stu.show_nickname) !== '0', is_on_duty: onDuty
       };
       enterApp();
     }
