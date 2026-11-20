@@ -796,6 +796,41 @@
     .toast.success { border-left-color: #10B981; }
     .toast.error { border-left-color: #EF4444; }
 
+    .sync-status-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 999px; font-size: 0.74rem; font-weight: 600;
+      background: #E0F2FE; color: #0369A1; white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .sync-status-pill.done { background: #D1FAE5; color: #047857; }
+    .sync-status-pill.error { background: #FEE2E2; color: #B91C1C; }
+
+    .img-upload-preview {
+      margin-top: 8px; display: flex; align-items: center; gap: 12px;
+      background: #F8FAFC; border: 1px dashed #94A3B8; border-radius: 12px; padding: 8px 10px;
+    }
+    .img-upload-preview img {
+      width: 72px; height: 72px; object-fit: cover; border-radius: 8px;
+      border: 1px solid #CBD5E1; cursor: pointer;
+    }
+    .task-img-thumb-wrap {
+      margin: 8px 0 10px;
+    }
+    .task-img-thumb {
+      width: 100%; max-height: 180px; object-fit: cover; border-radius: 12px;
+      border: 1px solid #E2E8F0; cursor: zoom-in; display: block;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .task-img-thumb:hover { transform: scale(1.01); box-shadow: 0 6px 16px rgba(15,23,42,0.12); }
+    .lightbox-box {
+      background: transparent; box-shadow: none; padding: 0; max-width: 92vw; max-height: 92vh;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .lightbox-img {
+      max-width: 90vw; max-height: 80vh; border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.45); background: #FFFFFF;
+    }
+
     .mt-8 { margin-top: 8px; } .mt-12 { margin-top: 12px; } .mt-16 { margin-top: 16px; } .mb-16 { margin-bottom: 16px; }
     .text-muted { color: var(--text-muted); } .text-sm { font-size: 0.8rem; }
 
@@ -910,6 +945,7 @@
 
         <!-- Compact Symbol Action Buttons on Top Right -->
         <div class="topbar-tools">
+          <span id="sync-status-pill" class="sync-status-pill hidden">🔄 ซิงค์...</span>
           <span id="topbar-user-name" class="user-chip">-</span>
           <button type="button" class="icon-btn" onclick="syncFromGoogleSheet(true)" title="ซิงค์ข้อมูลล่าสุด">
             🔄
@@ -1197,6 +1233,18 @@
                 <div class="form-group">
                   <label for="task-recorder-name">✍️ ผู้บันทึก</label>
                   <input type="text" id="task-recorder-name" readonly class="input-readonly" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="task-image-input">📷 แนบรูปภาพกระดาน / ใบงาน (ถ้ามี)</label>
+                <input type="file" id="task-image-input" accept="image/*" onchange="handleTaskImageSelect(event)" />
+                <div id="task-image-preview-wrap" class="img-upload-preview hidden">
+                  <img id="task-image-preview-img" src="" alt="ตัวอย่างรูปแนบ" onclick="openImageLightbox(this.src, 'ตัวอย่างรูปแนบ')" />
+                  <div style="flex:1;">
+                    <div id="task-image-info" class="text-sm text-muted" style="margin-bottom:4px;">พร้อมแนบรูปภาพ</div>
+                    <button type="button" class="btn btn-danger-soft btn-sm" onclick="clearTaskImageAttachment()">❌ ลบรูปภาพ</button>
+                  </div>
                 </div>
               </div>
 
@@ -1560,13 +1608,29 @@
     </div>
   </div>
 
+  <!-- Modal: ดูรูปภาพแนบขนาดใหญ่ (Lightbox) -->
+  <div id="modal-image-lightbox" class="modal-backdrop hidden" onclick="if (event.target === this) closeModal('modal-image-lightbox')">
+    <div class="lightbox-box">
+      <img id="lightbox-full-img" class="lightbox-img" src="" alt="รูปแนบงาน" />
+      <div style="display:flex; align-items:center; gap:10px; background:rgba(15,23,42,0.8); color:#fff; padding:8px 16px; border-radius:999px;">
+        <span id="lightbox-caption" style="font-size:0.86rem;"></span>
+        <button type="button" class="btn btn-outline btn-sm" style="background:#fff; color:#0F172A;" onclick="closeModal('modal-image-lightbox')">✕ ปิด</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // 📌 ลิงก์ Web App URL จาก Google Apps Script ของห้อง ม.4/6 (ฝังไว้ในโค้ดเรียบร้อยแล้ว)
     const DEFAULT_GSHEET_URL = 'https://script.google.com/macros/s/AKfycbzWrMYvUdRHU6wr3o0eaTQpf1MQi8r0bgSEHT_jpJmpGyPMcieYvBaqAd-B09E-OG3TVw/exec';
 
     const STORAGE_KEY = 'class_together_db_m46_real_v3';
     const GSHEET_URL_KEY = 'class_together_gsheet_url';
+    const SESSION_USER_KEY = 'class_together_session_user_v1';
+    const SESSION_SECTION_KEY = 'class_together_session_section_v1';
     let hasSyncedFromCloud = false;
+    let pendingWriteCount = 0;
+    let currentTaskImageDataUrl = '';
+    let syncPillTimer = null;
 
     // ล้างแคชข้อมูลตัวอย่างรุ่นเก่า (v1) ออกอัตโนมัติเพื่อไม่ให้ข้อมูลตัวอย่างย้อนกลับมาทับข้อมูลจริง
     try { localStorage.removeItem('class_together_db_v1'); } catch {}
@@ -1632,7 +1696,6 @@
         students: [
           { student_id: '18732', full_name: 'นายปิยะรชวัตร ด้วงเจริญ', nickname: 'แฟ้ม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
           { student_id: '18733', full_name: 'เด็กชายพิชาภพ สง่าเนตร', nickname: 'ซัน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '18872', full_name: 'นายณัฐวุฒิ อุปดิษฐ์', nickname: 'ปอ', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
           { student_id: '19816', full_name: 'นายทักษ์พงค์ จิตรคง', nickname: 'นาย', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
           { student_id: '20461', full_name: 'นายวรินทร จันทคุ้ม', nickname: 'ไนซ์', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
           { student_id: '20845', full_name: 'นายคณิศร ล่องลอย', nickname: 'เบล', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
@@ -1695,19 +1758,109 @@
       return initial;
     }
 
-    async function saveDbAndSync() {
+    async function saveDbAndSync(tablesToSync = null) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-      await pushLocalStateToGoogleSheet(true);
+      await pushLocalStateToGoogleSheet(true, tablesToSync);
+    }
+
+    function getNextId(arr, idField) {
+      return String(Math.max(0, ...(arr || []).map(x => Number(x?.[idField]) || 0)) + 1);
+    }
+
+    function setSyncPill(state, text) {
+      const el = document.getElementById('sync-status-pill');
+      if (!el) return;
+      if (syncPillTimer) { clearTimeout(syncPillTimer); syncPillTimer = null; }
+      el.classList.remove('hidden', 'done', 'error');
+      if (state === 'syncing') {
+        el.textContent = text || '🔄 กำลังซิงค์...';
+      } else if (state === 'done') {
+        el.classList.add('done');
+        el.textContent = text || '✅ อัปเดตแล้ว';
+        syncPillTimer = setTimeout(() => el.classList.add('hidden'), 2600);
+      } else if (state === 'error') {
+        el.classList.add('error');
+        el.textContent = text || '⚠️ ออฟไลน์';
+        syncPillTimer = setTimeout(() => el.classList.add('hidden'), 4000);
+      }
+    }
+
+    function openImageLightbox(src, caption = '') {
+      if (!src) return;
+      const img = document.getElementById('lightbox-full-img');
+      const cap = document.getElementById('lightbox-caption');
+      if (img) img.src = src;
+      if (cap) cap.textContent = caption || 'รูปภาพประกอบงาน';
+      openModal('modal-image-lightbox');
+    }
+
+    function handleTaskImageSelect(e) {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('กรุณาเลือกไฟล์รูปภาพเท่านั้นครับ', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const maxDim = 680;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w >= h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+
+          // บีบอัดรูปให้มีขนาดเหมาะสมเพื่อให้เก็บใน Google Sheets ได้อย่างรวดเร็ว (< 44,000 ตัวอักษร)
+          let quality = 0.65;
+          let dataUrl = canvas.toDataURL('image/jpeg', quality);
+          while (dataUrl.length > 44000 && quality > 0.2) {
+            quality -= 0.1;
+            dataUrl = canvas.toDataURL('image/jpeg', quality);
+          }
+          if (dataUrl.length > 46000) {
+            canvas.width = Math.round(w * 0.7);
+            canvas.height = Math.round(h * 0.7);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            dataUrl = canvas.toDataURL('image/jpeg', 0.45);
+          }
+
+          currentTaskImageDataUrl = dataUrl;
+          document.getElementById('task-image-preview-img').src = dataUrl;
+          document.getElementById('task-image-info').textContent = `📷 พร้อมแนบ (${Math.round(dataUrl.length / 1024)} KB)`;
+          document.getElementById('task-image-preview-wrap').classList.remove('hidden');
+        };
+        img.src = String(reader.result || '');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearTaskImageAttachment() {
+      currentTaskImageDataUrl = '';
+      const inp = document.getElementById('task-image-input');
+      if (inp) inp.value = '';
+      const img = document.getElementById('task-image-preview-img');
+      if (img) img.src = '';
+      document.getElementById('task-image-preview-wrap')?.classList.add('hidden');
     }
 
     function logActivity(actorType, actorId, actorName, actionType, targetType, targetId, detailsObj = {}) {
-      const nextId = String((db.activityLogs.length || 0) + 1);
-      db.activityLogs.unshift({
+      const nextId = getNextId(db.activityLogs, 'log_id');
+      const entry = {
         log_id: nextId, actor_type: actorType, actor_id: String(actorId),
         actor_name: String(actorName), action_type: actionType, target_type: targetType,
         target_id: String(targetId), details_json: JSON.stringify(detailsObj),
         created_at: new Date().toISOString()
-      });
+      };
+      db.activityLogs.unshift(entry);
+      return entry;
     }
 
     // ==================== GOOGLE SHEETS SYNC ====================
@@ -1749,18 +1902,22 @@
     }
 
     async function syncFromGoogleSheet(showNotification = false) {
+      setSyncPill('syncing', '🔄 กำลังซิงค์...');
       if (isEmbeddedAppsScript) {
         google.script.run
           .withSuccessHandler(res => {
             if (res && res.ok && res.state && Array.isArray(res.state.students)) {
+              if (pendingWriteCount > 0) return;
               normalizeLoadedState(res.state);
               db = res.state;
               hasSyncedFromCloud = true;
               localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
               refreshAllViews();
+              setSyncPill('done', '✅ อัปเดตแล้ว');
               if (showNotification) showToast('ซิงค์ข้อมูลจาก Google Sheets แล้ว', 'success');
-            } else if (res && !res.ok && showNotification) {
-              showToast(`Google Sheets แจ้งเตือน: ${res.error}`, 'error');
+            } else if (res && !res.ok) {
+              setSyncPill('error', '⚠️ ซิงค์ไม่สำเร็จ');
+              if (showNotification) showToast(`Google Sheets แจ้งเตือน: ${res.error}`, 'error');
             }
           })
           .callServerApi({ action: 'getAllState' });
@@ -1768,40 +1925,130 @@
       }
       if (!gsheetApiUrl) {
         hasSyncedFromCloud = true;
+        setSyncPill('done', '✅ พร้อมใช้');
         if (showNotification) showToast('อัปเดตข้อมูลล่าสุดเรียบร้อย', 'info');
         refreshAllViews();
         return;
       }
       try {
-        const res = await fetch(`${gsheetApiUrl}?action=getAllState`);
+        const res = await fetch(`${gsheetApiUrl}?action=getAllState&_t=${Date.now()}`);
         const data = await res.json();
         if (data && data.ok === false) {
           console.warn('Google Sheet Script Error:', data.error);
+          setSyncPill('error', '⚠️ ซิงค์ไม่สำเร็จ');
           if (showNotification) {
             showToast(`Google Sheet แจ้งเตือน: ${data.error} (กรุณาอัปเดตโค้ด Code.gs เป็นเวอร์ชันใหม่)`, 'error');
           }
           return;
         }
         if (data?.ok && Array.isArray(data.state?.students)) {
+          // หากผู้ใช้เพิ่งกดบันทึกงานค้างอยู่ อย่าเพิ่งเอาข้อมูลเก่าจากเซิร์ฟเวอร์มาทับ
+          if (pendingWriteCount > 0) {
+            setSyncPill('done', '✅ อัปเดตแล้ว');
+            return;
+          }
           normalizeLoadedState(data.state);
           hasSyncedFromCloud = true;
           if (data.state.students.length === 0 && Array.isArray(db.students) && db.students.length > 0) {
             await pushLocalStateToGoogleSheet(true);
+            setSyncPill('done', '✅ อัปเดตแล้ว');
             return;
           }
           db = data.state;
           localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
           refreshAllViews();
+          setSyncPill('done', '✅ อัปเดตแล้ว');
           if (showNotification) showToast(`ซิงค์กับ Google Sheets สำเร็จ! (นักเรียน ${db.students.length} คน)`, 'success');
         }
       } catch {
+        setSyncPill('error', '⚠️ ออฟไลน์');
         if (showNotification) showToast('เชื่อมต่อ Google Sheets ไม่สำเร็จ กรุณาตรวจสอบ URL', 'error');
       }
     }
 
-    async function pushLocalStateToGoogleSheet(silent = false) {
+    /**
+     * ส่งการเปลี่ยนแปลงแบบ Atomic (อัปเดตเฉพาะแถวเดียว ไม่ล้างตารางทั้งหมด)
+     * หากเซิร์ฟเวอร์ยังเป็น Code.gs เวอร์ชันเก่า จะดึงข้อมูลล่าสุดมา Merge เฉพาะแถวนี้ก่อนส่งอัตโนมัติ
+     */
+    async function callAtomicAction(action, payload, mergeFallbackFn = null, fallbackTables = null) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      if (!gsheetApiUrl && !isEmbeddedAppsScript) return { ok: true };
+
+      pendingWriteCount++;
+      setSyncPill('syncing', '💾 กำลังบันทึก...');
+      try {
+        if (isEmbeddedAppsScript) {
+          await new Promise((resolve) => {
+            google.script.run
+              .withSuccessHandler(() => resolve())
+              .withFailureHandler(() => resolve())
+              .callServerApi({ action, ...payload });
+          });
+          setSyncPill('done', '✅ บันทึกแล้ว');
+          return { ok: true };
+        }
+
+        const res = await fetch(gsheetApiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action, ...payload })
+        });
+        const data = await res.json().catch(() => ({}));
+
+        // กรณี Code.gs ยังเป็นเวอร์ชันเดิมที่ยังไม่รู้จัก action ใหม่ -> ดึงล่าสุดมา Merge แถวนี้แล้วส่งอย่างปลอดภัย
+        if (data && data.ok === false && String(data.error || '').includes('Unknown action') && typeof mergeFallbackFn === 'function') {
+          const latestRes = await fetch(`${gsheetApiUrl}?action=getAllState&_t=${Date.now()}`);
+          const latestJson = await latestRes.json().catch(() => null);
+          if (latestJson?.ok && latestJson.state) {
+            normalizeLoadedState(latestJson.state);
+            mergeFallbackFn(latestJson.state);
+            const partialState = {};
+            (fallbackTables || []).forEach(k => { if (latestJson.state[k] !== undefined) partialState[k] = latestJson.state[k]; });
+            await fetch(gsheetApiUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ action: 'syncStateFromClient', state: partialState })
+            });
+            db = latestJson.state;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+            hasSyncedFromCloud = true;
+            setSyncPill('done', '✅ บันทึกแล้ว');
+            return { ok: true, merged: true };
+          }
+        }
+
+        if (data && data.ok === false) {
+          setSyncPill('error', '⚠️ บันทึกไม่สำเร็จ');
+          return data;
+        }
+        hasSyncedFromCloud = true;
+        setSyncPill('done', '✅ บันทึกแล้ว');
+        return data;
+      } catch (err) {
+        setSyncPill('error', '⚠️ ออฟไลน์');
+        return { ok: false, error: String(err) };
+      } finally {
+        pendingWriteCount = Math.max(0, pendingWriteCount - 1);
+      }
+    }
+
+    async function pushLocalStateToGoogleSheet(silent = false, tablesToSync = null) {
+      let payloadState = db;
+      if (Array.isArray(tablesToSync) && tablesToSync.length > 0) {
+        payloadState = {};
+        tablesToSync.forEach(k => { if (db[k] !== undefined) payloadState[k] = db[k]; });
+      } else if (currentUser && currentUser.role === 'student') {
+        payloadState = {
+          tasks: db.tasks,
+          studentTasks: db.studentTasks,
+          helpRequests: db.helpRequests,
+          helpResponses: db.helpResponses,
+          activityLogs: db.activityLogs
+        };
+      }
+
       if (isEmbeddedAppsScript) {
-        google.script.run.callServerApi({ action: 'syncStateFromClient', state: db });
+        google.script.run.callServerApi({ action: 'syncStateFromClient', state: payloadState });
         if (!silent) showToast('บันทึกลง Google Sheets แล้ว', 'success');
         return;
       }
@@ -1809,25 +2056,31 @@
         if (!silent) showToast('กรุณาวาง Web App URL ก่อนครับ', 'error');
         return;
       }
-      // ป้องกันไม่ให้เบราว์เซอร์ที่ยังไม่ได้ดึงข้อมูลล่าสุดจาก Cloud เผลอส่งข้อมูลเก่าไปทับ Google Sheet
       if (!hasSyncedFromCloud && silent) {
         return;
       }
+      pendingWriteCount++;
+      setSyncPill('syncing', '💾 กำลังบันทึก...');
       try {
         const res = await fetch(gsheetApiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'syncStateFromClient', state: db })
+          body: JSON.stringify({ action: 'syncStateFromClient', state: payloadState })
         });
         const data = await res.json().catch(() => ({}));
         if (data && data.ok === false) {
+          setSyncPill('error', '⚠️ บันทึกไม่สำเร็จ');
           if (!silent) showToast(`บันทึกขึ้น Sheet ไม่สำเร็จ: ${data.error}`, 'error');
           return;
         }
         hasSyncedFromCloud = true;
+        setSyncPill('done', '✅ บันทึกแล้ว');
         if (!silent) showToast('อัปโหลดข้อมูลขึ้น Google Sheets สำเร็จ!', 'success');
       } catch {
+        setSyncPill('error', '⚠️ ออฟไลน์');
         if (!silent) showToast('ไม่สามารถส่งข้อมูลไป Google Sheets ได้', 'error');
+      } finally {
+        pendingWriteCount = Math.max(0, pendingWriteCount - 1);
       }
     }
 
@@ -1870,6 +2123,20 @@
     window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('gsheet-url-input').value = gsheetApiUrl;
       renderDemoChips();
+
+      // กู้คืนสถานะการล็อกอินเดิมทันที (กด F5 รีเฟรชจะไม่หลุดจากระบบ และแสดงผลทันทีไม่ต่องรอโหลด)
+      try {
+        const savedUserRaw = localStorage.getItem(SESSION_USER_KEY);
+        const savedSection = localStorage.getItem(SESSION_SECTION_KEY);
+        if (savedUserRaw) {
+          const parsedUser = JSON.parse(savedUserRaw);
+          if (parsedUser && parsedUser.role && parsedUser.id) {
+            currentUser = parsedUser;
+            enterApp(savedSection || null);
+          }
+        }
+      } catch {}
+
       syncFromGoogleSheet(false);
     });
 
@@ -1943,8 +2210,11 @@
       enterApp();
     }
 
-    function handleTeacherLogin(e) {
+    async function handleTeacherLogin(e) {
       e.preventDefault();
+      if (!hasSyncedFromCloud && gsheetApiUrl) {
+        await syncFromGoogleSheet(false);
+      }
       const uname = document.getElementById('login-teacher-user').value.trim();
       const pass = document.getElementById('login-teacher-pass').value.trim();
       const tc = (db.teachers || []).find(t => t.username === uname && String(t.password) === pass);
@@ -1956,17 +2226,25 @@
 
     function handleLogout() {
       currentUser = null;
+      try {
+        localStorage.removeItem(SESSION_USER_KEY);
+        localStorage.removeItem(SESSION_SECTION_KEY);
+      } catch {}
       document.getElementById('app-view').classList.add('hidden');
       document.getElementById('login-view').classList.remove('hidden');
       renderDemoChips();
     }
 
-    function enterApp() {
+    function enterApp(initialSection = null) {
       document.getElementById('login-view').classList.add('hidden');
       document.getElementById('app-view').classList.remove('hidden');
 
       const isTeacher = currentUser.role === 'teacher';
       currentUser.is_on_duty = isTeacher || isStudentCurrentlyOnDuty(currentUser.student_id);
+
+      try {
+        localStorage.setItem(SESSION_USER_KEY, JSON.stringify(currentUser));
+      } catch {}
 
       document.getElementById('topbar-user-name').textContent = isTeacher
         ? `👩‍🏫 ครูที่ปรึกษา`
@@ -1979,7 +2257,15 @@
 
       populateSubjectControls();
       updateHelpCenterBadge();
-      navigateSection(isTeacher ? 'teacher-dashboard' : 'student-home');
+
+      const validStudentSections = ['student-home', 'class-dashboard', 'help-center', ...(currentUser.is_on_duty ? ['duty-manager'] : [])];
+      const validTeacherSections = ['teacher-dashboard', 'class-dashboard', 'help-center', 'duty-manager'];
+      const allowed = isTeacher ? validTeacherSections : validStudentSections;
+      const targetSec = (initialSection && allowed.includes(initialSection))
+        ? initialSection
+        : (isTeacher ? 'teacher-dashboard' : 'student-home');
+
+      navigateSection(targetSec);
       if (!isTeacher) {
         checkFriendHelpNotifications(false);
       }
@@ -2127,6 +2413,7 @@
     function navigateSection(sec) {
       if (sec === 'default') sec = currentUser?.role === 'teacher' ? 'teacher-dashboard' : 'student-home';
       currentSection = sec;
+      try { localStorage.setItem(SESSION_SECTION_KEY, sec); } catch {}
       ['student-home', 'class-dashboard', 'help-center', 'duty-manager', 'teacher-dashboard'].forEach(s => {
         document.getElementById(`section-${s}`)?.classList.toggle('hidden', s !== sec);
         document.getElementById(`nav-${s}`)?.classList.toggle('active', s === sec);
@@ -2235,6 +2522,12 @@
               <h4 class="task-title">${escapeHtml(t.title)}</h4>
               <p class="task-desc">${escapeHtml(t.description)}</p>
 
+              ${t.image_url ? `
+                <div class="task-img-thumb-wrap">
+                  <img class="task-img-thumb" src="${escapeHtml(t.image_url)}" alt="รูปประกอบงาน ${escapeHtml(t.title)}" onclick="openImageLightbox(this.src, '${escapeHtml(t.title)}')" title="คลิกเพื่อขยายรูปภาพ" />
+                </div>
+              ` : ''}
+
               <!-- สัญลักษณ์แทนข้อความยาวๆ -->
               <div class="symbol-meta-row">
                 <span class="sym-chip" title="ผู้จดงาน">✍️ ${escapeHtml(t.created_by_name)}</span>
@@ -2265,40 +2558,58 @@
       }).join('');
     }
 
-    function updateMyTaskStatus(taskId, newStatus) {
+    function updateMyTaskStatus(taskId, newStatus, skipSync = false) {
       if (!currentUser || currentUser.role !== 'student') return;
       const now = new Date().toISOString();
-      const idx = db.studentTasks.findIndex(st => String(st.student_id) === String(currentUser.student_id) && String(st.task_id) === String(taskId));
+      const sid = String(currentUser.student_id);
+      const tid = String(taskId);
+      const idx = db.studentTasks.findIndex(st => String(st.student_id) === sid && String(st.task_id) === tid);
       const submittedAt = newStatus === 'submitted' ? now : '';
 
+      const record = { student_id: sid, task_id: tid, status: newStatus, submitted_at: submittedAt, updated_at: now };
       if (idx >= 0) {
-        db.studentTasks[idx].status = newStatus;
-        db.studentTasks[idx].submitted_at = submittedAt;
-        db.studentTasks[idx].updated_at = now;
+        Object.assign(db.studentTasks[idx], record);
       } else {
-        db.studentTasks.push({
-          student_id: String(currentUser.student_id), task_id: String(taskId),
-          status: newStatus, submitted_at: submittedAt, updated_at: now
-        });
+        db.studentTasks.push(record);
       }
 
       if (newStatus === 'submitted') {
         db.helpRequests.forEach(hr => {
-          if (String(hr.student_id) === String(currentUser.student_id) && String(hr.task_id) === String(taskId) && hr.status !== 'resolved') {
+          if (String(hr.student_id) === sid && String(hr.task_id) === tid && hr.status !== 'resolved') {
             hr.status = 'resolved';
             hr.resolved_at = now;
           }
         });
       }
 
-      const taskObj = db.tasks.find(t => String(t.task_id) === String(taskId));
-      logActivity('student', currentUser.student_id, currentUser.full_name, 'UPDATE_TASK_STATUS', 'Task', taskId, {
-        task_title: taskObj ? taskObj.title : taskId, new_status: newStatus
+      const taskObj = db.tasks.find(t => String(t.task_id) === tid);
+      const logEntry = logActivity('student', currentUser.student_id, currentUser.full_name, 'UPDATE_TASK_STATUS', 'Task', tid, {
+        task_title: taskObj ? taskObj.title : tid, new_status: newStatus
       });
-      saveDbAndSync();
+
       renderStudentDashboard();
       updateHelpCenterBadge();
-      showToast(newStatus === 'submitted' ? '✅ บันทึกส่งงานแล้ว!' : '⏳ อัปเดตเป็นกำลังทำ!', 'success');
+      if (!skipSync) {
+        showToast(newStatus === 'submitted' ? '✅ บันทึกส่งงานแล้ว!' : '⏳ อัปเดตเป็นกำลังทำ!', 'success');
+        callAtomicAction(
+          'upsertStudentTask',
+          { record, log: logEntry },
+          (remoteState) => {
+            const rIdx = (remoteState.studentTasks || []).findIndex(st => String(st.student_id) === sid && String(st.task_id) === tid);
+            if (rIdx >= 0) Object.assign(remoteState.studentTasks[rIdx], record);
+            else remoteState.studentTasks.push(record);
+            if (newStatus === 'submitted') {
+              (remoteState.helpRequests || []).forEach(hr => {
+                if (String(hr.student_id) === sid && String(hr.task_id) === tid && hr.status !== 'resolved') {
+                  hr.status = 'resolved';
+                  hr.resolved_at = now;
+                }
+              });
+            }
+          },
+          newStatus === 'submitted' ? ['studentTasks', 'helpRequests'] : ['studentTasks']
+        );
+      }
     }
 
     function openNeedHelpModal(taskId) {
@@ -2313,32 +2624,59 @@
 
     function submitNeedHelpForm(e) {
       e.preventDefault();
-      const taskId = document.getElementById('help-modal-task-id').value;
+      const taskId = String(document.getElementById('help-modal-task-id').value);
       const reason_category = document.getElementById('help-reason-category').value;
       const details = document.getElementById('help-details').value.trim();
       const display_name = document.getElementById('help-display-name').value.trim();
       const now = new Date().toISOString();
+      const sid = String(currentUser.student_id);
 
-      updateMyTaskStatus(taskId, 'need_help');
+      updateMyTaskStatus(taskId, 'need_help', true);
 
-      const existing = db.helpRequests.find(hr => String(hr.student_id) === String(currentUser.student_id) && String(hr.task_id) === String(taskId) && hr.status !== 'resolved');
+      const existing = db.helpRequests.find(hr => String(hr.student_id) === sid && String(hr.task_id) === taskId && hr.status !== 'resolved');
+      let hrRecord;
       if (existing) {
         existing.reason_category = reason_category;
         existing.details = details;
         existing.display_name = display_name;
+        hrRecord = existing;
       } else {
-        db.helpRequests.unshift({
-          request_id: String((db.helpRequests.length || 0) + 1),
-          student_id: String(currentUser.student_id), task_id: String(taskId),
+        hrRecord = {
+          request_id: getNextId(db.helpRequests, 'request_id'),
+          student_id: sid, task_id: taskId,
           display_name, reason_category, details, status: 'open', created_at: now, resolved_at: ''
-        });
+        };
+        db.helpRequests.unshift(hrRecord);
       }
 
-      saveDbAndSync();
       closeModal('modal-need-help');
       renderStudentDashboard();
       updateHelpCenterBadge();
       showToast('🙋 ส่งคำขอไปที่หน้า "💛 ช่วยเพื่อน" แล้ว!', 'success');
+
+      callAtomicAction(
+        'upsertHelpRequest',
+        { record: hrRecord },
+        (remoteState) => {
+          const stIdx = (remoteState.studentTasks || []).findIndex(st => String(st.student_id) === sid && String(st.task_id) === taskId);
+          const stRec = { student_id: sid, task_id: taskId, status: 'need_help', submitted_at: '', updated_at: now };
+          if (stIdx >= 0) Object.assign(remoteState.studentTasks[stIdx], stRec);
+          else remoteState.studentTasks.push(stRec);
+
+          const exHr = (remoteState.helpRequests || []).find(hr => String(hr.student_id) === sid && String(hr.task_id) === taskId && hr.status !== 'resolved');
+          if (exHr) {
+            exHr.reason_category = reason_category;
+            exHr.details = details;
+            exHr.display_name = display_name;
+          } else {
+            remoteState.helpRequests.unshift({
+              ...hrRecord,
+              request_id: getNextId(remoteState.helpRequests, 'request_id')
+            });
+          }
+        },
+        ['studentTasks', 'helpRequests']
+      );
     }
 
     function renderStudentPersonalHistory() {
@@ -2528,37 +2866,62 @@
 
     function submitVolunteerForm(e) {
       e.preventDefault();
-      const reqId = document.getElementById('vol-request-id').value;
+      const reqId = String(document.getElementById('vol-request-id').value);
       const help_method = document.getElementById('vol-help-method').value;
       const message = document.getElementById('vol-message').value.trim();
 
-      const r = (db.helpRequests || []).find(x => String(x.request_id) === String(reqId));
+      const r = (db.helpRequests || []).find(x => String(x.request_id) === reqId);
       if (!r) return;
 
       const helperName = currentUser.role === 'student' ? currentUser.nickname : 'ครูที่ปรึกษา';
-      db.helpResponses.push({
-        response_id: String((db.helpResponses.length || 0) + 1),
-        request_id: String(reqId), helper_student_id: String(currentUser.id),
+      const respRecord = {
+        response_id: getNextId(db.helpResponses, 'response_id'),
+        request_id: reqId, helper_student_id: String(currentUser.id),
         helper_name: helperName, help_method, message, created_at: new Date().toISOString()
-      });
+      };
+      db.helpResponses.push(respRecord);
 
       if (r.status === 'open') r.status = 'helped';
-      saveDbAndSync();
       closeModal('modal-volunteer');
       renderHelpCenter();
       updateHelpCenterBadge();
       showToast('💝 ขอบคุณที่ช่วยเพื่อนนะ!', 'success');
+
+      callAtomicAction(
+        'addHelpResponse',
+        { record: respRecord },
+        (remoteState) => {
+          remoteState.helpResponses.push({
+            ...respRecord,
+            response_id: getNextId(remoteState.helpResponses, 'response_id')
+          });
+          const rr = (remoteState.helpRequests || []).find(x => String(x.request_id) === reqId);
+          if (rr && rr.status === 'open') rr.status = 'helped';
+        },
+        ['helpRequests', 'helpResponses']
+      );
     }
 
     function resolveHelpRequest(reqId) {
-      const r = (db.helpRequests || []).find(x => String(x.request_id) === String(reqId));
+      const idStr = String(reqId);
+      const r = (db.helpRequests || []).find(x => String(x.request_id) === idStr);
       if (!r) return;
+      const now = new Date().toISOString();
       r.status = 'resolved';
-      r.resolved_at = new Date().toISOString();
-      saveDbAndSync();
+      r.resolved_at = now;
       renderHelpCenter();
       updateHelpCenterBadge();
       showToast('✔️ ปิดคำขอเรียบร้อยแล้ว', 'success');
+
+      callAtomicAction(
+        'resolveHelpRequest',
+        { request_id: idStr },
+        (remoteState) => {
+          const rr = (remoteState.helpRequests || []).find(x => String(x.request_id) === idStr);
+          if (rr) { rr.status = 'resolved'; rr.resolved_at = now; }
+        },
+        ['helpRequests']
+      );
     }
 
     // ==================== SECTION 4: STUDENT TASK MANAGERS ====================
@@ -2583,6 +2946,7 @@
       document.getElementById('task-recorder-name').value = currentUser?.role === 'teacher'
         ? 'ครูที่ปรึกษา'
         : `${currentUser?.nickname || ''} (เวร)`;
+      clearTaskImageAttachment();
       updateSelectedSubjectTeacherHint();
     }
 
@@ -2602,6 +2966,7 @@
               <span class="sym-chip">⏰ ${escapeHtml(formatThaiDateTime(t.due_date))}</span>
             </div>
             <div style="font-weight:700; margin:4px 0;">${escapeHtml(t.title)}</div>
+            ${t.image_url ? `<div style="margin:6px 0;"><img src="${escapeHtml(t.image_url)}" alt="รูปแนบ" style="max-height:90px; border-radius:8px; border:1px solid #CBD5E1; cursor:zoom-in;" onclick="openImageLightbox(this.src, '${escapeHtml(t.title)}')" /></div>` : ''}
             <div class="text-muted text-sm">✍️ ${escapeHtml(t.created_by_name)}</div>
             ${isCancelled ? `<div style="color:#B91C1C; font-size:0.78rem;">🚫 ยกเลิก: ${escapeHtml(t.cancel_reason)}</div>` : `
               <div class="btn-row mt-8">
@@ -2629,6 +2994,15 @@
       document.getElementById('task-due-date').value = String(t.due_date).slice(0, 16);
       document.getElementById('task-attachment-url').value = t.attachment_url || '';
       document.getElementById('task-target-group').value = t.target_group || 'ทุกคน';
+
+      if (t.image_url) {
+        currentTaskImageDataUrl = t.image_url;
+        document.getElementById('task-image-preview-img').src = t.image_url;
+        document.getElementById('task-image-info').textContent = '📷 มีรูปภาพแนบอยู่แล้ว';
+        document.getElementById('task-image-preview-wrap').classList.remove('hidden');
+      } else {
+        clearTaskImageAttachment();
+      }
     }
 
     function handlePreviewTaskBeforeSave(e) {
@@ -2643,11 +3017,12 @@
       const target_group = document.getElementById('task-target-group').value.trim() || 'ทุกคน';
       const due_change_reason = document.getElementById('task-due-change-reason').value.trim();
       const recorder = document.getElementById('task-recorder-name').value;
+      const image_url = currentTaskImageDataUrl || '';
 
       const subObj = (db.subjects || []).find(s => String(s.subject_id) === String(subject_id));
       const dups = (db.tasks || []).filter(t => t.status !== 'cancelled' && String(t.task_id) !== String(editId) && t.title.toLowerCase() === title.toLowerCase());
 
-      pendingTaskPreview = { editId, subject_id, title, description, assigned_date, due_date, attachment_url, target_group, due_change_reason, recorder };
+      pendingTaskPreview = { editId, subject_id, title, description, assigned_date, due_date, attachment_url, target_group, due_change_reason, recorder, image_url };
 
       const warnBox = document.getElementById('task-preview-dup-warning');
       warnBox.classList.toggle('hidden', dups.length === 0);
@@ -2659,6 +3034,7 @@
         <div>📝 <strong>รายละเอียด:</strong> ${escapeHtml(description)}</div>
         <div>⏰ <strong>กำหนดส่ง:</strong> ${escapeHtml(due_date.replace('T', ' '))}</div>
         <div>✍️ <strong>ผู้บันทึก:</strong> ${escapeHtml(recorder)}</div>
+        ${image_url ? `<div style="margin-top:6px;"><div>📷 <strong>รูปภาพแนบ:</strong></div><img src="${escapeHtml(image_url)}" alt="รูปแนบ" style="max-width:100%; max-height:180px; border-radius:10px; margin-top:4px; border:1px solid #CBD5E1;" /></div>` : ''}
       `;
       openModal('modal-task-preview');
     }
@@ -2667,6 +3043,7 @@
       if (!pendingTaskPreview) return;
       const p = pendingTaskPreview;
       const now = new Date().toISOString();
+      let savedTaskObj = null;
 
       if (p.editId) {
         const t = db.tasks.find(x => String(x.task_id) === String(p.editId));
@@ -2680,39 +3057,68 @@
             subject_id: p.subject_id, title: p.title, description: p.description,
             assigned_date: p.assigned_date, due_date: p.due_date,
             attachment_url: p.attachment_url, target_group: p.target_group,
-            due_date_history: JSON.stringify(hist), updated_at: now
+            due_date_history: JSON.stringify(hist), image_url: p.image_url || '',
+            updated_at: now
           });
+          savedTaskObj = { ...t };
         }
         showToast('บันทึกการแก้ไขแล้ว', 'success');
       } else {
-        const nextId = String(Math.max(0, ...db.tasks.map(x => Number(x.task_id) || 0)) + 1);
-        db.tasks.push({
+        const nextId = getNextId(db.tasks, 'task_id');
+        savedTaskObj = {
           task_id: nextId, subject_id: p.subject_id, title: p.title, description: p.description,
           assigned_date: p.assigned_date, due_date: p.due_date, attachment_url: p.attachment_url,
           target_group: p.target_group, status: 'active', cancel_reason: '',
           created_by_type: currentUser.role === 'teacher' ? 'teacher' : 'student_duty',
           created_by_id: String(currentUser.id), created_by_name: p.recorder,
-          due_date_history: '[]', created_at: now, updated_at: now
-        });
+          due_date_history: '[]', image_url: p.image_url || '', created_at: now, updated_at: now
+        };
+        db.tasks.push(savedTaskObj);
         showToast('🎉 เพิ่มงานใหม่เรียบร้อยแล้ว!', 'success');
       }
 
-      saveDbAndSync();
       closeModal('modal-task-preview');
       resetTaskForm();
       renderDutyTasksList();
+
+      if (savedTaskObj) {
+        callAtomicAction(
+          'upsertTask',
+          { record: savedTaskObj },
+          (remoteState) => {
+            const idx = (remoteState.tasks || []).findIndex(x => String(x.task_id) === String(savedTaskObj.task_id));
+            if (idx >= 0) Object.assign(remoteState.tasks[idx], savedTaskObj);
+            else {
+              savedTaskObj.task_id = p.editId ? savedTaskObj.task_id : getNextId(remoteState.tasks, 'task_id');
+              remoteState.tasks.push(savedTaskObj);
+            }
+          },
+          ['tasks']
+        );
+      }
     }
 
     function promptCancelTask(taskId) {
       const reason = window.prompt('ระบุเหตุผลที่ยกเลิกงานนี้:');
       if (!reason || !reason.trim()) return;
-      const t = db.tasks.find(x => String(x.task_id) === String(taskId));
+      const tid = String(taskId);
+      const t = db.tasks.find(x => String(x.task_id) === tid);
       if (!t) return;
+      const fullReason = `${reason.trim()} (${currentUser.nickname || currentUser.full_name})`;
       t.status = 'cancelled';
-      t.cancel_reason = `${reason.trim()} (${currentUser.nickname || currentUser.full_name})`;
-      saveDbAndSync();
+      t.cancel_reason = fullReason;
       renderDutyTasksList();
       showToast('ยกเลิกงานเรียบร้อยแล้ว', 'success');
+
+      callAtomicAction(
+        'cancelTask',
+        { task_id: tid, cancel_reason: fullReason },
+        (remoteState) => {
+          const rt = (remoteState.tasks || []).find(x => String(x.task_id) === tid);
+          if (rt) { rt.status = 'cancelled'; rt.cancel_reason = fullReason; }
+        },
+        ['tasks']
+      );
     }
 
     // ==================== SECTION 5: TEACHER DASHBOARD ====================
@@ -2813,7 +3219,7 @@
 
     function deleteWeeklyDutyByTeacher(dutyId) {
       db.weeklyDuties = (db.weeklyDuties || []).filter(d => String(d.duty_id) !== String(dutyId));
-      saveDbAndSync();
+      saveDbAndSync(['weeklyDuties', 'activityLogs']);
       renderDemoChips();
       renderTeacherDutyTab();
       showToast('🗑️ ลบรอบเวรเรียบร้อยแล้ว', 'success');
@@ -2848,12 +3254,12 @@
       if (ids.length === 0) return showToast('กรุณาเลือกนักเรียนอย่างน้อย 1 คน', 'error');
 
       db.weeklyDuties.push({
-        duty_id: String((db.weeklyDuties.length || 0) + 1),
+        duty_id: getNextId(db.weeklyDuties, 'duty_id'),
         week_label, start_date, end_date, note: '',
         student_ids_json: JSON.stringify(ids), is_active: '1',
         created_by: currentUser.full_name, created_at: new Date().toISOString()
       });
-      saveDbAndSync();
+      saveDbAndSync(['weeklyDuties', 'activityLogs']);
       document.getElementById('duty-week-label').value = '';
       renderTeacherDutyTab();
       showToast('บันทึกตารางเวรแล้ว', 'success');
@@ -2889,7 +3295,7 @@
 
     function deleteSubjectByTeacher(subId) {
       db.subjects = (db.subjects || []).filter(s => String(s.subject_id) !== String(subId));
-      saveDbAndSync();
+      saveDbAndSync(['subjects', 'activityLogs']);
       populateSubjectControls();
       renderTeacherSubjectsAndTasks();
       showToast('🗑️ ลบรายวิชาเรียบร้อยแล้ว', 'success');
@@ -2897,7 +3303,7 @@
 
     function handleSaveSubject(e) {
       e.preventDefault();
-      const nextId = String((db.subjects.length || 0) + 1);
+      const nextId = getNextId(db.subjects, 'subject_id');
       db.subjects.push({
         subject_id: nextId,
         subject_code: document.getElementById('sub-code').value.trim(),
@@ -2906,7 +3312,10 @@
         color_hex: document.getElementById('sub-color').value,
         is_active: '1'
       });
-      saveDbAndSync();
+      document.getElementById('sub-code').value = '';
+      document.getElementById('sub-name').value = '';
+      document.getElementById('sub-teacher').value = '';
+      saveDbAndSync(['subjects', 'activityLogs']);
       populateSubjectControls();
       renderTeacherSubjectsAndTasks();
       showToast('เพิ่มรายวิชาแล้ว', 'success');
@@ -2916,7 +3325,7 @@
       const s = db.subjects.find(x => String(x.subject_id) === String(subId));
       if (!s) return;
       s.is_active = String(s.is_active) === '1' ? '0' : '1';
-      saveDbAndSync();
+      saveDbAndSync(['subjects', 'activityLogs']);
       populateSubjectControls();
       renderTeacherSubjectsAndTasks();
     }
@@ -2925,7 +3334,7 @@
       db.tasks = (db.tasks || []).filter(t => String(t.task_id) !== String(taskId));
       db.studentTasks = (db.studentTasks || []).filter(st => String(st.task_id) !== String(taskId));
       db.helpRequests = (db.helpRequests || []).filter(hr => String(hr.task_id) !== String(taskId));
-      saveDbAndSync();
+      saveDbAndSync(['tasks', 'studentTasks', 'helpRequests', 'activityLogs']);
       renderTeacherDashboard();
       showToast('🗑️ ลบงานเรียบร้อยแล้ว', 'success');
     }
@@ -3019,7 +3428,7 @@
       });
 
       logActivity('teacher', currentUser?.id || 'teacher', currentUser?.full_name || 'ครู', 'DELETE_STUDENT', 'Student', sid, { deleted: label });
-      saveDbAndSync();
+      saveDbAndSync(['students', 'studentTasks', 'helpRequests', 'helpResponses', 'weeklyDuties', 'activityLogs']);
       renderDemoChips();
       renderTeacherDashboard();
       showToast(`🗑️ ลบรายชื่อ ${label} เรียบร้อยแล้ว`, 'success');
@@ -3045,7 +3454,7 @@
       (db.weeklyDuties || []).forEach(d => { d.student_ids_json = '[]'; });
 
       logActivity('teacher', currentUser?.id || 'teacher', currentUser?.full_name || 'ครู', 'CLEAR_ALL_STUDENTS', 'Student', 'all', {});
-      saveDbAndSync();
+      saveDbAndSync(['students', 'studentTasks', 'helpRequests', 'helpResponses', 'weeklyDuties', 'activityLogs']);
       renderDemoChips();
       renderTeacherDashboard();
       showToast('🗑️ ล้างรายชื่อนักเรียนทั้งหมดเรียบร้อยแล้ว', 'success');
@@ -3068,7 +3477,7 @@
       document.getElementById('stu-fullname').value = '';
       document.getElementById('stu-nick').value = '';
 
-      saveDbAndSync();
+      saveDbAndSync(['students', 'activityLogs']);
       renderDemoChips();
       renderTeacherDashboard();
       showToast('💾 บันทึกข้อมูลนักเรียนแล้ว', 'success');
@@ -3097,7 +3506,7 @@
         else db.students.push({ student_id, full_name, nickname, grade_level, classroom, pin, show_nickname: '1', is_active: '1', updated_at: new Date().toISOString() });
         count++;
       });
-      saveDbAndSync();
+      saveDbAndSync(['students', 'activityLogs']);
       renderTeacherStudentsTab();
       showToast(`นำเข้าสำเร็จ ${count} คน!`, 'success');
     }
@@ -3213,14 +3622,25 @@
       const cur = document.getElementById('cp-current-pin').value.trim();
       const nw = document.getElementById('cp-new-pin').value.trim();
       const showNick = document.getElementById('cp-show-nickname').checked;
-      const stu = db.students.find(s => String(s.student_id) === String(currentUser.student_id));
+      const sid = String(currentUser.student_id);
+      const stu = db.students.find(s => String(s.student_id) === sid);
       if (!stu || String(stu.pin) !== cur) return showToast('PIN ปัจจุบันไม่ถูกต้อง', 'error');
       stu.pin = nw;
       stu.show_nickname = showNick ? '1' : '0';
       currentUser.show_nickname = showNick;
-      saveDbAndSync();
+      try { localStorage.setItem(SESSION_USER_KEY, JSON.stringify(currentUser)); } catch {}
       closeModal('modal-change-pin');
       showToast('🔑 เปลี่ยนรหัส PIN เรียบร้อยแล้ว', 'success');
+
+      callAtomicAction(
+        'changeStudentPin',
+        { student_id: sid, pin: nw, show_nickname: stu.show_nickname },
+        (remoteState) => {
+          const rs = (remoteState.students || []).find(s => String(s.student_id) === sid);
+          if (rs) { rs.pin = nw; rs.show_nickname = stu.show_nickname; }
+        },
+        ['students']
+      );
     }
   </script>
 </body>
