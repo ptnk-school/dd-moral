@@ -1564,8 +1564,12 @@
     // 📌 ลิงก์ Web App URL จาก Google Apps Script ของห้อง ม.4/6 (ฝังไว้ในโค้ดเรียบร้อยแล้ว)
     const DEFAULT_GSHEET_URL = 'https://script.google.com/macros/s/AKfycbzWrMYvUdRHU6wr3o0eaTQpf1MQi8r0bgSEHT_jpJmpGyPMcieYvBaqAd-B09E-OG3TVw/exec';
 
-    const STORAGE_KEY = 'class_together_db_v1';
+    const STORAGE_KEY = 'class_together_db_m46_real_v3';
     const GSHEET_URL_KEY = 'class_together_gsheet_url';
+    let hasSyncedFromCloud = false;
+
+    // ล้างแคชข้อมูลตัวอย่างรุ่นเก่า (v1) ออกอัตโนมัติเพื่อไม่ให้ข้อมูลตัวอย่างย้อนกลับมาทับข้อมูลจริง
+    try { localStorage.removeItem('class_together_db_v1'); } catch {}
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('api')) {
@@ -1626,155 +1630,46 @@
           { username: 'teacher', full_name: 'ครูที่ปรึกษา ม.4/6', role: 'admin', password: 'teacher1234', created_at: now }
         ],
         students: [
-          { student_id: '6740601', full_name: 'นายกิตติพงศ์ ใจดี', nickname: 'กิต', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740602', full_name: 'นางสาวชนากานต์ รักเรียน', nickname: 'ฟ้า', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740603', full_name: 'นายณัฐวุฒิ มุ่งมั่น', nickname: 'ณัฐ', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740604', full_name: 'นางสาวธัญชนก สดใส', nickname: 'มิ้นต์', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740605', full_name: 'นายปภาวิน มีวินัย', nickname: 'วิน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740606', full_name: 'นางสาวพิชญาภา อารี', nickname: 'พิม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740607', full_name: 'นายภัทรพล ร่วมใจ', nickname: 'ภัทร', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740608', full_name: 'นางสาวลลิตา พากเพียร', nickname: 'ลิน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740609', full_name: 'นายศุภกร ช่วยเพื่อน', nickname: 'กร', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740610', full_name: 'นางสาวสิริยากร ตั้งใจ', nickname: 'เนย', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740611', full_name: 'นายอภิวิชญ์ ก้าวหน้า', nickname: 'โอม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
-          { student_id: '6740612', full_name: 'นางสาวอารยา สามัคคี', nickname: 'อาย', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now }
+          { student_id: '18732', full_name: 'นายปิยะรชวัตร ด้วงเจริญ', nickname: 'แฟ้ม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '18733', full_name: 'เด็กชายพิชาภพ สง่าเนตร', nickname: 'ซัน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '18872', full_name: 'นายณัฐวุฒิ อุปดิษฐ์', nickname: 'ปอ', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '19816', full_name: 'นายทักษ์พงค์ จิตรคง', nickname: 'นาย', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20461', full_name: 'นายวรินทร จันทคุ้ม', nickname: 'ไนซ์', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20845', full_name: 'นายคณิศร ล่องลอย', nickname: 'เบล', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20846', full_name: 'นายณวัฒน์ สลุงอยู่', nickname: 'เฟย์', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20847', full_name: 'เด็กชายธนโชค จุลศิลป์', nickname: 'โก๊ะ', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20848', full_name: 'เด็กชายธนธร ภู่แสนสอาด', nickname: 'อะตอม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20849', full_name: 'เด็กชายธนวิชญ์ เกตุสุวรรณ', nickname: 'ตูน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20850', full_name: 'นายภีมเดช เกิดเพ็ชร์', nickname: 'ภีม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20851', full_name: 'นายภูริณัฐ สายสุข', nickname: 'ปังปอนด์', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20852', full_name: 'นายศุภมงคล นิ่มประดิษฐ์', nickname: 'ตี้', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20853', full_name: 'นายอาทิตย์ กฤษ์ศรี', nickname: 'โม่', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '21034', full_name: 'นายนพนัยต์ พรมมิ', nickname: 'เปา', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '18777', full_name: 'นางสาวณัชชา ลิบวงศ์สุต', nickname: 'ฝน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '18939', full_name: 'นางสาวจิราพัชร สาทิพจันทร์', nickname: 'ปาล์ม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '18781', full_name: 'นางสาวนภัสสร เม็งจันทึก', nickname: 'หลิน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '18784', full_name: 'นางสาวปรัชญา โต๊ะศิลา', nickname: 'แพรว', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '18800', full_name: 'นางสาวอภิชญา ช่างทอง', nickname: 'ครีม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20854', full_name: 'เด็กหญิงกตธิตา ด้วงประเสริฐ', nickname: 'แก้ม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20855', full_name: 'นางสาวชญานุช ดอกสันเทียะ', nickname: 'มาย', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20856', full_name: 'นางสาวเบญญาภา ปีเอี่ยม', nickname: 'เอ็มเจ', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20857', full_name: 'เด็กหญิงปุณยาพร เทียมสี', nickname: 'กระติ๊บ', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20858', full_name: 'นางสาวภัทราภรณ์ พงษ์โอสถ', nickname: 'แอม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20859', full_name: 'นางสาวเมธาพร แจ้แจ้ง', nickname: 'อาย', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20860', full_name: 'นางสาวรุ้ง แก้วอุดร', nickname: 'รุ้ง', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20861', full_name: 'นางสาวศิรประภา จันทรา', nickname: 'มีน', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20862', full_name: 'เด็กหญิงสิริยากร ทำลานดี', nickname: 'มิว', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20863', full_name: 'เด็กหญิงอชิรญา ไชยทาง', nickname: 'ออม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '20999', full_name: 'นางสาวกัญชลิกา งานสลุง', nickname: 'เค้ก', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '21000', full_name: 'เด็กหญิงวิศัลยา พลีสังข์', nickname: 'เปา', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now },
+          { student_id: '21001', full_name: 'นางสาวศิรภัสสร นิลมาลา', nickname: 'ลักยิ้ม', grade_level: 'ม.4', classroom: '6', pin: '1234', show_nickname: '1', is_active: '1', updated_at: now }
         ],
-        subjects: [
-          { subject_id: '1', subject_code: 'ค31101', subject_name: 'คณิตศาสตร์', color_hex: '#0284C7', teacher_name: 'ครูสมชาย', is_active: '1' },
-          { subject_id: '2', subject_code: 'ท31101', subject_name: 'ภาษาไทย', color_hex: '#10B981', teacher_name: 'ครูสายใจ', is_active: '1' },
-          { subject_id: '3', subject_code: 'อ31101', subject_name: 'ภาษาอังกฤษ', color_hex: '#6366F1', teacher_name: 'ครูเจนนี่', is_active: '1' },
-          { subject_id: '4', subject_code: 'ว31201', subject_name: 'ฟิสิกส์', color_hex: '#F59E0B', teacher_name: 'ครูวิชัย', is_active: '1' },
-          { subject_id: '5', subject_code: 'ว31221', subject_name: 'เคมี', color_hex: '#EC4899', teacher_name: 'ครูนภา', is_active: '1' },
-          { subject_id: '6', subject_code: 'ว31181', subject_name: 'คอมพิวเตอร์', color_hex: '#14B8A6', teacher_name: 'ครูธีรภัทร', is_active: '1' }
-        ],
-        weeklyDuties: [
-          {
-            duty_id: '1',
-            week_label: 'สัปดาห์ที่ 1',
-            start_date: getBangkokDateString(-10),
-            end_date: getBangkokDateString(-4),
-            note: 'ปฏิบัติหน้าที่เรียบร้อย',
-            student_ids_json: JSON.stringify(['6740606', '6740607', '6740608', '6740609', '6740610']),
-            is_active: '1',
-            created_by: 'ครูที่ปรึกษา',
-            created_at: now
-          },
-          {
-            duty_id: '2',
-            week_label: 'สัปดาห์นี้',
-            start_date: getBangkokDateString(-2),
-            end_date: getBangkokDateString(5),
-            note: 'เวรจดงานประจำสัปดาห์',
-            student_ids_json: JSON.stringify(['6740601', '6740602', '6740603', '6740604', '6740605']),
-            is_active: '1',
-            created_by: 'ครูที่ปรึกษา',
-            created_at: now
-          }
-        ],
-        tasks: [
-          {
-            task_id: '1', subject_id: '1',
-            title: 'แบบฝึกหัดเรื่องเซต (หน้า 24-25)',
-            description: 'ทำลงสมุด ข้อ 1-10 วาดแผนภาพเวนน์ประกอบ',
-            assigned_date: getBangkokDateString(-3),
-            due_date: getBangkokDateString(1) + 'T16:00',
-            attachment_url: 'https://proj14.ipst.ac.th/',
-            target_group: 'ทุกคน', status: 'active', cancel_reason: '',
-            created_by_type: 'student_duty', created_by_id: '6740601',
-            created_by_name: 'กิต (เวร)',
-            due_date_history: '[]', created_at: now, updated_at: now
-          },
-          {
-            task_id: '2', subject_id: '4',
-            title: 'มายด์แมป การเคลื่อนที่แนวตรง',
-            description: 'สรุปสูตรลงกระดาษ A4 ตกแต่งให้สวยงาม',
-            assigned_date: getBangkokDateString(-3),
-            due_date: getBangkokDateString(2) + 'T16:30',
-            attachment_url: '', target_group: 'ทุกคน', status: 'active', cancel_reason: '',
-            created_by_type: 'student_duty', created_by_id: '6740602',
-            created_by_name: 'ฟ้า (เวร)',
-            due_date_history: JSON.stringify([
-              { old_due_date: getBangkokDateString(1) + 'T12:00', new_due_date: getBangkokDateString(2) + 'T16:30', changed_by: 'ฟ้า (เวร)', reason: 'ครูขยายเวลาส่ง 1 วัน' }
-            ]),
-            created_at: now, updated_at: now
-          },
-          {
-            task_id: '3', subject_id: '2',
-            title: 'วิเคราะห์วรรณคดีเรื่องอิเหนา',
-            description: 'เขียนคุณค่าด้านวรรณศิลป์และสังคม 1 หน้ากระดาษ',
-            assigned_date: getBangkokDateString(-2),
-            due_date: getBangkokDateString(4) + 'T12:00',
-            attachment_url: '', target_group: 'ทุกคน', status: 'active', cancel_reason: '',
-            created_by_type: 'teacher', created_by_id: 'teacher',
-            created_by_name: 'ครูที่ปรึกษา',
-            due_date_history: '[]', created_at: now, updated_at: now
-          },
-          {
-            task_id: '4', subject_id: '3',
-            title: 'เขียนพารากราฟ My Future Goal',
-            description: 'ความยาว 80-100 คำ พร้อมขีดเส้นใต้ Topic Sentence',
-            assigned_date: getBangkokDateString(-1),
-            due_date: getBangkokDateString(6) + 'T16:00',
-            attachment_url: '', target_group: 'ทุกคน', status: 'active', cancel_reason: '',
-            created_by_type: 'student_duty', created_by_id: '6740603',
-            created_by_name: 'ณัฐ (เวร)',
-            due_date_history: '[]', created_at: now, updated_at: now
-          },
-          {
-            task_id: '5', subject_id: '6',
-            title: 'วาดผังงาน Flowchart แก้ปัญหา',
-            description: 'เลือกปัญหาในชีวิตประจำวัน 1 เรื่อง',
-            assigned_date: getBangkokDateString(0),
-            due_date: getBangkokDateString(7) + 'T15:30',
-            attachment_url: '', target_group: 'ทุกคน', status: 'active', cancel_reason: '',
-            created_by_type: 'student_duty', created_by_id: '6740604',
-            created_by_name: 'มิ้นต์ (เวร)',
-            due_date_history: '[]', created_at: now, updated_at: now
-          }
-        ],
-        studentTasks: [
-          { student_id: '6740601', task_id: '1', status: 'submitted', submitted_at: now, updated_at: now },
-          { student_id: '6740601', task_id: '2', status: 'in_progress', submitted_at: '', updated_at: now },
-          { student_id: '6740601', task_id: '3', status: 'need_help', submitted_at: '', updated_at: now },
-          { student_id: '6740601', task_id: '4', status: 'submitted', submitted_at: now, updated_at: now },
-          { student_id: '6740601', task_id: '5', status: 'in_progress', submitted_at: '', updated_at: now },
-          { student_id: '6740602', task_id: '1', status: 'submitted', submitted_at: now, updated_at: now },
-          { student_id: '6740602', task_id: '2', status: 'submitted', submitted_at: now, updated_at: now },
-          { student_id: '6740602', task_id: '3', status: 'submitted', submitted_at: now, updated_at: now },
-          { student_id: '6740603', task_id: '1', status: 'need_help', submitted_at: '', updated_at: now },
-          { student_id: '6740603', task_id: '2', status: 'submitted', submitted_at: now, updated_at: now },
-          { student_id: '6740604', task_id: '1', status: 'submitted', submitted_at: now, updated_at: now },
-          { student_id: '6740605', task_id: '1', status: 'submitted', submitted_at: now, updated_at: now },
-          { student_id: '6740606', task_id: '2', status: 'need_help', submitted_at: '', updated_at: now }
-        ],
-        helpRequests: [
-          {
-            request_id: '1', student_id: '6740603', task_id: '1',
-            display_name: 'ณัฐ', reason_category: 'ไม่เข้าใจเนื้อหาหรือคำสั่งงาน',
-            details: 'งงเรื่องการแรเงาแผนภาพเวนน์ 3 เซต ข้อ 8-10 ครับ',
-            status: 'helped', created_at: now, resolved_at: ''
-          },
-          {
-            request_id: '2', student_id: '6740606', task_id: '2',
-            display_name: 'พิม', reason_category: 'ไม่รู้จะเริ่มต้นทำงานอย่างไร',
-            details: 'ขอไอเดียแบ่งหัวข้อผังความคิดความเร่งหน่อยค่ะ',
-            status: 'open', created_at: now, resolved_at: ''
-          },
-          {
-            request_id: '3', student_id: '6740601', task_id: '3',
-            display_name: 'กิต', reason_category: 'ต้องการเพื่อนช่วยอธิบาย',
-            details: 'อยากได้ตัวอย่างการยกบทประพันธ์มาอ้างอิงครับ',
-            status: 'open', created_at: now, resolved_at: ''
-          }
-        ],
-        helpResponses: [
-          {
-            response_id: '1', request_id: '1', helper_student_id: '6740602',
-            helper_name: 'ฟ้า', help_method: 'อธิบายบทเรียน',
-            message: 'เดี๋ยวพักเที่ยงเอาสมุดไปไล่สเต็ปให้ดูนะ!',
-            created_at: now
-          }
-        ],
+        subjects: [],
+        weeklyDuties: [],
+        tasks: [],
+        studentTasks: [],
+        helpRequests: [],
+        helpResponses: [],
         activityLogs: []
       };
     }
@@ -1800,9 +1695,9 @@
       return initial;
     }
 
-    function saveDbAndSync() {
+    async function saveDbAndSync() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-      pushLocalStateToGoogleSheet(true);
+      await pushLocalStateToGoogleSheet(true);
     }
 
     function logActivity(actorType, actorId, actorName, actionType, targetType, targetId, detailsObj = {}) {
@@ -1816,20 +1711,40 @@
     }
 
     // ==================== GOOGLE SHEETS SYNC ====================
+    const isFakeSampleStudentId = (id) => /^67406(0[1-9]|1[0-2])$/.test(String(id || '').trim());
+
     function normalizeLoadedState(remoteState) {
       if (!remoteState) return;
       if (Array.isArray(remoteState.students)) {
-        remoteState.students = remoteState.students.map(s => ({
-          ...s,
-          student_id: String(s.student_id || '').trim(),
-          full_name: String(s.full_name || '').trim(),
-          nickname: String(s.nickname || s.full_name || '').trim(),
-          grade_level: String(s.grade_level || 'ม.4').trim(),
-          classroom: String(s.classroom || '6').trim(),
-          pin: String(s.pin || '1234').trim() || '1234',
-          show_nickname: s.show_nickname !== undefined && s.show_nickname !== '' ? String(s.show_nickname) : '1',
-          is_active: (String(s.is_active) === '0' || String(s.is_active).toLowerCase() === 'false') ? '0' : '1'
-        })).filter(s => s.student_id !== '');
+        // กรองรายชื่อตัวอย่างรุ่นเก่า (รหัส 6740601-6740612) ออกอัตโนมัติ
+        remoteState.students = remoteState.students
+          .filter(s => !isFakeSampleStudentId(s.student_id))
+          .map(s => ({
+            ...s,
+            student_id: String(s.student_id || '').trim(),
+            full_name: String(s.full_name || '').trim(),
+            nickname: String(s.nickname || s.full_name || '').trim(),
+            grade_level: String(s.grade_level || 'ม.4').trim(),
+            classroom: String(s.classroom || '6').trim(),
+            pin: String(s.pin || '1234').trim() || '1234',
+            show_nickname: s.show_nickname !== undefined && s.show_nickname !== '' ? String(s.show_nickname) : '1',
+            is_active: (String(s.is_active) === '0' || String(s.is_active).toLowerCase() === 'false') ? '0' : '1'
+          })).filter(s => s.student_id !== '');
+      }
+      if (Array.isArray(remoteState.tasks)) {
+        remoteState.tasks = remoteState.tasks.filter(t => !isFakeSampleStudentId(t.created_by_id));
+      }
+      if (Array.isArray(remoteState.studentTasks)) {
+        remoteState.studentTasks = remoteState.studentTasks.filter(st => !isFakeSampleStudentId(st.student_id));
+      }
+      if (Array.isArray(remoteState.helpRequests)) {
+        remoteState.helpRequests = remoteState.helpRequests.filter(hr => !isFakeSampleStudentId(hr.student_id));
+      }
+      if (Array.isArray(remoteState.helpResponses)) {
+        remoteState.helpResponses = remoteState.helpResponses.filter(r => !isFakeSampleStudentId(r.helper_student_id));
+      }
+      if (!Array.isArray(remoteState.teachers) || remoteState.teachers.length === 0) {
+        remoteState.teachers = [{ username: 'teacher', full_name: 'ครูที่ปรึกษา ม.4/6', role: 'admin', password: 'teacher1234', created_at: new Date().toISOString() }];
       }
     }
 
@@ -1840,6 +1755,7 @@
             if (res && res.ok && res.state && Array.isArray(res.state.students)) {
               normalizeLoadedState(res.state);
               db = res.state;
+              hasSyncedFromCloud = true;
               localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
               refreshAllViews();
               if (showNotification) showToast('ซิงค์ข้อมูลจาก Google Sheets แล้ว', 'success');
@@ -1851,6 +1767,7 @@
         return;
       }
       if (!gsheetApiUrl) {
+        hasSyncedFromCloud = true;
         if (showNotification) showToast('อัปเดตข้อมูลล่าสุดเรียบร้อย', 'info');
         refreshAllViews();
         return;
@@ -1867,7 +1784,7 @@
         }
         if (data?.ok && Array.isArray(data.state?.students)) {
           normalizeLoadedState(data.state);
-          // หากใน Google Sheet ยังว่างอยู่ (0 คน) แต่ในเครื่องครูมีรายชื่อนักเรียนอยู่แล้ว ให้ส่งรายชื่อจากเครื่องขึ้น Sheet อัตโนมัติ
+          hasSyncedFromCloud = true;
           if (data.state.students.length === 0 && Array.isArray(db.students) && db.students.length > 0) {
             await pushLocalStateToGoogleSheet(true);
             return;
@@ -1892,6 +1809,10 @@
         if (!silent) showToast('กรุณาวาง Web App URL ก่อนครับ', 'error');
         return;
       }
+      // ป้องกันไม่ให้เบราว์เซอร์ที่ยังไม่ได้ดึงข้อมูลล่าสุดจาก Cloud เผลอส่งข้อมูลเก่าไปทับ Google Sheet
+      if (!hasSyncedFromCloud && silent) {
+        return;
+      }
       try {
         const res = await fetch(gsheetApiUrl, {
           method: 'POST',
@@ -1900,9 +1821,10 @@
         });
         const data = await res.json().catch(() => ({}));
         if (data && data.ok === false) {
-          if (!silent) showToast(`บันทึกขึ้น Sheet ไม่สำเร็จ: ${data.error} (กรุณาอัปเดตโค้ด Code.gs)`, 'error');
+          if (!silent) showToast(`บันทึกขึ้น Sheet ไม่สำเร็จ: ${data.error}`, 'error');
           return;
         }
+        hasSyncedFromCloud = true;
         if (!silent) showToast('อัปโหลดข้อมูลขึ้น Google Sheets สำเร็จ!', 'success');
       } catch {
         if (!silent) showToast('ไม่สามารถส่งข้อมูลไป Google Sheets ได้', 'error');
