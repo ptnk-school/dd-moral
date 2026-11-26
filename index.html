@@ -1435,6 +1435,40 @@
 
         <!-- TAB 5: REPORTS -->
         <div id="ttab-reports" class="teacher-tab-pane hidden">
+          <!-- รายงานติดตาม: ใครยังไม่ส่งงานรายวิชา -->
+          <div class="card mb-16" style="border:2px solid #FCA5A5;">
+            <div class="card-header-flex">
+              <h3 class="card-title">🚨 รายงานติดตาม: ใครยังไม่ส่งงานบ้าง (แยกรายวิชา)</h3>
+              <div class="btn-row">
+                <button type="button" class="btn btn-outline btn-sm" onclick="copyMissingReportText()">📋 คัดลอกข้อความ (ส่ง LINE)</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="exportMissingReportCsv()">📥 ส่งออก CSV</button>
+              </div>
+            </div>
+            <div class="form-row-3" style="margin-bottom:12px;">
+              <div class="form-group">
+                <label for="missing-filter-subject">📘 รายวิชา</label>
+                <select id="missing-filter-subject" onchange="renderMissingSubmissionReport()"></select>
+              </div>
+              <div class="form-group">
+                <label for="missing-filter-scope">⏰ ช่วงงาน</label>
+                <select id="missing-filter-scope" onchange="renderMissingSubmissionReport()">
+                  <option value="all">ทุกงานที่ยังเปิดอยู่</option>
+                  <option value="overdue">เฉพาะงานที่เลยกำหนดส่งแล้ว</option>
+                  <option value="upcoming">เฉพาะงานที่ยังไม่ถึงกำหนด</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="missing-filter-view">👀 มุมมอง</label>
+                <select id="missing-filter-view" onchange="renderMissingSubmissionReport()">
+                  <option value="task">แยกตามชิ้นงาน</option>
+                  <option value="student">แยกตามนักเรียน (ค้างกี่งาน)</option>
+                </select>
+              </div>
+            </div>
+            <div id="missing-report-summary" class="symbol-meta-row mb-16"></div>
+            <div id="missing-report-wrap"></div>
+          </div>
+
           <div class="card mb-16">
             <div class="card-header-flex">
               <h3 class="card-title">👩‍🎓 สรุปการส่งงานรายบุคคล & ส่งออกไฟล์</h3>
@@ -3563,6 +3597,8 @@
     }
 
     function renderTeacherReportsTab() {
+      populateMissingSubjectFilter();
+      renderMissingSubmissionReport();
       const activeTasks = (db.tasks || []).filter(t => t.status !== 'cancelled');
       const students = (db.students || []).filter(s => String(s.is_active) === '1');
 
@@ -3614,6 +3650,163 @@
           </tbody>
         </table>
       `;
+    }
+
+    // ==================== รายงานติดตาม: ใครยังไม่ส่งงาน ====================
+    function populateMissingSubjectFilter() {
+      const sel = document.getElementById('missing-filter-subject');
+      if (!sel) return;
+      const cur = sel.value || 'all';
+      const subs = (db.subjects || []).filter(s => String(s.is_active) === '1');
+      sel.innerHTML = `<option value="all">📚 ทุกวิชา</option>` + subs.map(s =>
+        `<option value="${escapeHtml(s.subject_id)}">${escapeHtml(s.subject_name)}${s.teacher_name ? ' (' + escapeHtml(s.teacher_name) + ')' : ''}</option>`
+      ).join('');
+      sel.value = (cur === 'all' || subs.some(s => String(s.subject_id) === String(cur))) ? cur : 'all';
+    }
+
+    function parseDueDate(str) {
+      if (!str) return null;
+      const d = new Date(String(str).replace(' ', 'T'));
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function getMissingReportData() {
+      const subId = document.getElementById('missing-filter-subject')?.value || 'all';
+      const scope = document.getElementById('missing-filter-scope')?.value || 'all';
+      const now = new Date();
+      const subMap = {};
+      (db.subjects || []).forEach(s => { subMap[String(s.subject_id)] = s; });
+      const students = (db.students || []).filter(s => String(s.is_active) === '1');
+
+      const tasks = (db.tasks || [])
+        .filter(t => t.status !== 'cancelled' && subMap[String(t.subject_id)] && String(subMap[String(t.subject_id)].is_active) === '1')
+        .filter(t => subId === 'all' || String(t.subject_id) === String(subId))
+        .filter(t => {
+          if (scope === 'all') return true;
+          const due = parseDueDate(t.due_date);
+          if (!due) return scope === 'upcoming';
+          return scope === 'overdue' ? due < now : due >= now;
+        })
+        .sort((a, b) => String(a.due_date).localeCompare(String(b.due_date)));
+
+      const rows = tasks.map(t => {
+        const missing = [];
+        students.forEach(s => {
+          const rec = (db.studentTasks || []).find(st => String(st.student_id) === String(s.student_id) && String(st.task_id) === String(t.task_id));
+          const status = rec ? rec.status : 'pending';
+          if (status !== 'submitted') missing.push({ ...s, status });
+        });
+        const due = parseDueDate(t.due_date);
+        return { task: t, sub: subMap[String(t.subject_id)], missing, overdue: due ? due < now : false };
+      });
+      return { rows, students, tasks };
+    }
+
+    const MISSING_STATUS_LABEL = { pending: '⚪ ยังไม่ทำ', in_progress: '⏳ กำลังทำ', need_help: '🙋 ขอช่วย' };
+
+    function renderMissingSubmissionReport() {
+      const wrap = document.getElementById('missing-report-wrap');
+      const sumEl = document.getElementById('missing-report-summary');
+      if (!wrap) return;
+      const view = document.getElementById('missing-filter-view')?.value || 'task';
+      const { rows, students } = getMissingReportData();
+
+      const totalMissing = rows.reduce((a, r) => a + r.missing.length, 0);
+      const studentsWithMissing = new Set();
+      rows.forEach(r => r.missing.forEach(m => studentsWithMissing.add(m.student_id)));
+      sumEl.innerHTML = `
+        <span class="sym-chip">📋 งาน ${rows.length} ชิ้น</span>
+        <span class="sym-chip warn">❗ ค้างส่งรวม ${totalMissing} รายการ</span>
+        <span class="sym-chip warn">👥 นักเรียนที่ยังค้าง ${studentsWithMissing.size}/${students.length} คน</span>
+      `;
+
+      if (rows.length === 0) {
+        wrap.innerHTML = `<div class="text-muted text-sm" style="text-align:center; padding:20px;">ไม่มีงานตามเงื่อนไขที่เลือก</div>`;
+        return;
+      }
+
+      if (view === 'student') {
+        const map = {};
+        rows.forEach(r => r.missing.forEach(m => {
+          if (!map[m.student_id]) map[m.student_id] = { stu: m, items: [] };
+          map[m.student_id].items.push({ ...r, status: m.status });
+        }));
+        const list = Object.values(map).sort((a, b) => b.items.length - a.items.length || String(a.stu.student_id).localeCompare(String(b.stu.student_id)));
+        if (list.length === 0) {
+          wrap.innerHTML = `<div style="text-align:center; padding:20px; color:#047857; font-weight:700;">🎉 ทุกคนส่งงานครบแล้ว!</div>`;
+          return;
+        }
+        wrap.innerHTML = `
+          <div class="table-responsive"><table class="data-table">
+            <thead><tr><th>รหัส</th><th>ชื่อ-นามสกุล</th><th>ชื่อเล่น</th><th>ค้าง</th><th>งานที่ยังไม่ส่ง</th></tr></thead>
+            <tbody>
+              ${list.map(x => `<tr>
+                <td><strong>${escapeHtml(x.stu.student_id)}</strong></td>
+                <td>${escapeHtml(x.stu.full_name)}</td>
+                <td>${escapeHtml(x.stu.nickname)}</td>
+                <td style="color:#B91C1C; font-weight:700;">${x.items.length}</td>
+                <td>${x.items.map(i => `<div style="margin-bottom:3px;">
+                  <span class="subject-tag" style="background:${escapeHtml(i.sub.color_hex)}; font-size:0.7rem;">${escapeHtml(i.sub.subject_name)}</span>
+                  ${escapeHtml(i.task.title)} <small class="text-muted">(${MISSING_STATUS_LABEL[i.status] || i.status}${i.overdue ? ' • 🔴 เลยกำหนด' : ''})</small>
+                </div>`).join('')}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table></div>`;
+        return;
+      }
+
+      wrap.innerHTML = rows.map(r => {
+        const sentCount = students.length - r.missing.length;
+        const pct = students.length ? Math.round((sentCount / students.length) * 100) : 0;
+        return `
+          <div class="manage-task-item" style="margin-bottom:10px; ${r.overdue && r.missing.length ? 'border-color:#FCA5A5; background:#FFF7F7;' : ''}">
+            <div class="task-top-row">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span class="subject-tag" style="background:${escapeHtml(r.sub.color_hex)}">${escapeHtml(r.sub.subject_name)}</span>
+                <span class="sym-chip" style="background:#F0F9FF; color:#0369A1; font-weight:600;">👩‍🏫 ${escapeHtml(r.sub.teacher_name || 'ไม่ระบุครู')}</span>
+                ${r.overdue ? '<span class="sym-chip warn">🔴 เลยกำหนดส่ง</span>' : ''}
+              </div>
+              <span class="sym-chip">⏰ ${escapeHtml(formatThaiDateTime(r.task.due_date))}</span>
+            </div>
+            <div style="font-weight:700; margin:6px 0;">📌 ${escapeHtml(r.task.title)}</div>
+            <div class="prog-label-row"><span>✅ ส่งแล้ว ${sentCount}/${students.length} คน</span><span style="color:#B91C1C; font-weight:700;">❗ ยังไม่ส่ง ${r.missing.length} คน</span></div>
+            <div class="prog-track mb-16"><div class="prog-fill fill-green" style="width:${pct}%"></div></div>
+            ${r.missing.length === 0
+              ? '<div style="color:#047857; font-weight:700;">🎉 ส่งครบทุกคนแล้ว!</div>'
+              : `<div class="demo-chips">${r.missing.map(m => `<span class="badge-pill ${m.status === 'need_help' ? 'badge-blue' : ''}" style="${m.status === 'pending' ? 'background:#FEE2E2; color:#991B1B;' : m.status === 'in_progress' ? 'background:#E0F2FE; color:#0369A1;' : ''}" title="${escapeHtml(m.full_name)} • ${MISSING_STATUS_LABEL[m.status] || ''}">${escapeHtml(m.nickname)} (${escapeHtml(m.student_id)}) ${m.status === 'in_progress' ? '⏳' : m.status === 'need_help' ? '🙋' : ''}</span>`).join('')}</div>`}
+          </div>`;
+      }).join('') + `<div class="text-muted text-sm">สัญลักษณ์: 🔴 ป้ายแดง = ยังไม่ทำ • ⏳ = กำลังทำ • 🙋 = ขอความช่วยเหลือ</div>`;
+    }
+
+    function copyMissingReportText() {
+      const { rows } = getMissingReportData();
+      if (rows.length === 0) return showToast('ไม่มีงานตามเงื่อนไขที่เลือก', 'info');
+      const lines = [`📢 รายชื่อนักเรียน ม.4/6 ที่ยังไม่ส่งงาน (ข้อมูล ณ ${formatThaiDateTime(new Date().toISOString())})`, ''];
+      rows.forEach(r => {
+        lines.push(`📘 ${r.sub.subject_name}${r.sub.teacher_name ? ' (' + r.sub.teacher_name + ')' : ''}`);
+        lines.push(`📌 ${r.task.title} • ⏰ ${formatThaiDateTime(r.task.due_date)}${r.overdue ? ' 🔴เลยกำหนด' : ''}`);
+        if (r.missing.length === 0) lines.push('   🎉 ส่งครบทุกคนแล้ว');
+        else r.missing.forEach((m, i) => lines.push(`   ${i + 1}. ${m.nickname} (${m.student_id})${m.status === 'in_progress' ? ' ⏳' : m.status === 'need_help' ? ' 🙋' : ''}`));
+        lines.push('');
+      });
+      lines.push('💛 งานไม่ค้าง เพื่อนไม่ทิ้งกัน');
+      navigator.clipboard.writeText(lines.join('\n'))
+        .then(() => showToast('📋 คัดลอกรายงานแล้ว นำไปวางใน LINE ได้เลย!', 'success'))
+        .catch(() => showToast('คัดลอกไม่สำเร็จ', 'error'));
+    }
+
+    function exportMissingReportCsv() {
+      const { rows } = getMissingReportData();
+      const out = ['รายวิชา,ครูประจำวิชา,ชื่องาน,กำหนดส่ง,เลยกำหนด,รหัสนักเรียน,ชื่อ-นามสกุล,ชื่อเล่น,สถานะ'];
+      rows.forEach(r => r.missing.forEach(m => {
+        out.push([r.sub.subject_name, r.sub.teacher_name || '-', r.task.title, r.task.due_date, r.overdue ? 'ใช่' : 'ไม่', m.student_id, m.full_name, m.nickname, (MISSING_STATUS_LABEL[m.status] || m.status).replace(/^\S+\s/, '')]
+          .map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
+      }));
+      const blob = new Blob(['\uFEFF' + out.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'class-together-missing-submissions.csv';
+      a.click();
     }
 
     function exportStudentSummaryCsv() {
